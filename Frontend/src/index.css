@@ -1,0 +1,22 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+html {
+    box-sizing: border-box;
+}
+body {
+  background-color: #3E4046;
+  margin: 0;
+  -webkit-font-smoothing: anti-aliased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Space Mono', monospace;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+html, body, #root {
+    height: 100%;
+}
