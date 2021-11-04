@@ -1,0 +1,28 @@
+- name: set up git config to all for cloning private repo
+  hosts: all
+  tasks:
+    - name: clone practice private repo
+      git:
+        repo: https://tieje:[your-key]@github.com/tieje/private-clone-trial.git
+        dest: /home/thomasfrancis/private-clone-trial
+        clone: yes
+    - name: show folder
+      command: ls
+      register: sfolder
+    - name: show contents
+      command: ls private-clone-trial
+      register: cfolder
+    - name: display user level
+      debug:
+        msg: "{{ sfolder.stdout_lines }}"
+    - name: display project level
+      debug:
+        msg: "{{ cfolder.stdout_lines }}"
+
+
+# This token is fine to make public since it's only read-access
+# to run this
+# ansible-playbook $ANSIBLE_TASKS/git-clone-practice-private-repo.yml -i $ANSIBLE_HOSTS
+# to check for repo
+# ansible -i $ANSIBLE_HOSTS all -a "ls"
+# ansible -i $ANSIBLE_HOSTS all -a "ls private-clone-trial"

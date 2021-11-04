@@ -1,0 +1,5 @@
+- name: delete hello
+  hosts: all
+  tasks:
+    - name: delete hello file
+      command: "rm hello-world"

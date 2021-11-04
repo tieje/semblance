@@ -1,0 +1,9 @@
+- name: remove the cloned practice private repo from thomas francis
+  hosts: all
+  tasks:
+    - name: delete repo
+      command: rm -rf /home/thomasfrancis/private-clone-trial
+# run
+# ansible-playbook $ANSIBLE_TASKS/git-remove-practice-private-repo.yml -i $ANSIBLE_HOSTS
+# test
+# # ansible -i $ANSIBLE_HOSTS all -a "ls"

@@ -1,0 +1,5 @@
+- name: hello
+  hosts: all
+  tasks:
+    - name: print hello in file hello world
+      command: "touch hello-world"

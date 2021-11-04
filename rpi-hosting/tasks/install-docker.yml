@@ -1,0 +1,6 @@
+- name: install docker
+  hosts: all
+  become: true
+  tasks:
+    - name: install docker sdk for python
+      command: pip install docker docker-compose

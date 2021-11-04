@@ -1,0 +1,118 @@
+10/21/2021
+
+docker-compose up -d nginx
+
+docker exec -it prod-nginx /bin/bash
+
+I moved the original docker-compose.yml and the override to the docker compose file folder so I can practice.
+
+docker-compose up does not work very well with just isolating one service from multiple configuration files.
+
+It's working now, so I guess I'll test out making some actual configurations.
+
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+Supposedly, it's supposed to be docker compose without the up in the beginning at least
+
+https://ashwin9798.medium.com/nginx-with-docker-and-node-js-a-beginners-guide-434fe1216b6b
+javatpoint.com/nginx-directive-and-context
+
+I don't want to set up a reverse proxy. I don't really need it since scaling is rather automatic anyways.
+
+I'll set up a reverse proxy only because it is true that I should let each container specialize instead of handle many things.
+
+I found out what the mime.types file is for:
+http://nginx.org/en/docs/http/ngx_http_core_module.html#types
+https://stackoverflow.com/questions/21788833/nginx-mime-types-and-gzip
+
+enabling sendfile
+https://treehozz.com/what-is-nginx-sendfile
+
+Where to store and use configuration files.
+
+https://stackoverflow.com/questions/22143565/which-nginx-config-file-is-enabled-etc-nginx-conf-d-default-conf-or-etc-nginx
+https://www.digitalocean.com/community/tutorials/how-to-configure-the-nginx-web-server-on-a-virtual-private-server
+https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/
+
+The default.conf "includes" all the configuration files in conf.d/ folder.
+All I need to do is create a configuration on top of the existing default configuration.
+The default is like the base configuration in docker.
+
+tcp_nopush, sendfile, and tcp_nodedelay
+https://thoughts.t37.net/nginx-optimization-understanding-sendfile-tcp-nodelay-and-tcp-nopush-c55cdd276765
+Extremely helpful
+
+I'll need to see if I need to build a configuration for either sites-available or sites-enabled and the difference between them.
+
+Actually... I'll need to set up a proxy pass because I'll be using this as a reverse proxy.
+
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.override.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.override.yml up -d --build nginx
+
+http://localhost:80
+
+https://stackoverflow.com/questions/28028789/nginx-proxy-pass-to-a-linked-docker-container
+
+https://stackoverflow.com/questions/47981240/nginx-cant-find-upstream-node-app-when-running-via-docker-compose
+
+I'm so lost...
+I don't know what to do...
+I'll need to look at how nginx proxy pass works later as well as other people's configurations.
+
+https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose
+
+communication between containers in docker-compose
+https://stackoverflow.com/questions/61244829/docker-compose-containers-communication
+
+networking in compose
+https://docs.docker.com/compose/networking/
+
+https://medium.com/@caysever/docker-compose-network-b86e424fad82
+
+https://www.tutorialworks.com/container-networking/
+
+https://netbeez.net/blog/networking-with-docker/
+
+https://stackoverflow.com/questions/11693135/multiple-websites-on-nginx-sites-available
+
+https://www.freecodecamp.org/news/docker-nginx-letsencrypt-easy-secure-reverse-proxy-40165ba3aee2/
+
+ssl for later
+https://www.freecodecamp.org/news/docker-compose-nginx-and-letsencrypt-setting-up-website-to-do-all-the-things-for-that-https-7cb0bf774b7e/
+
+
+https://stackoverflow.com/questions/59973882/proxying-react-app-using-nginx-on-docker-compose
+https://geekflare.com/nginx-static-files-node-js/
+
+deleted the try_files part
+
+seems to work now.
+
+backend api runs without proper styling though
+https://stackoverflow.com/questions/20181121/django-admin-not-working-ugly-serving-with-nginx-and-gunicorn
+
+It's an nginx problem, not a gunicorn problem.
+
+The problem lies mainly with gunicorn and nginx. Supposedly there is a socket file that gunicorn is supposed to generate.
+But it doesn't. So that sucks...
+nginx is supposed to use this gunicorn socket file for it's interpretation.
+It's so close. Text shows up fine.
+I might need to delve deep into gunicorn and nginx to determine what the issue is...
+Otherwise, there is alternative I could use...
+
+https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html
+
+Consider using this instead of gunicorn. I'm running into rather... unsolvable problems with gunicorn right now.
+
+docker-compose -f docker-compose.yml -f docker-compose.dev-prod.yml up -d --build
+
+docker-compose down --remove-orphans
+
+I won't be able to use docker to set up a database. I'll need to rely on a database hosting service.
+It shouldn't be that bad... I hope.
+
+10/24/2021
+https://pawamoy.github.io/posts/docker-compose-django-postgres-nginx/
+This might be it.
+
+Gottem

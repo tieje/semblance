@@ -1,0 +1,79 @@
+services:
+  db:
+    image: postgis/postgis
+    platform: linux/amd64
+    # 12 is used instead of 13 due to post-gis docker documentation
+    # By default, PostgreSQL databases are named the same as the user which creates them. If the user exists, then the db is named after the user. To keep it simple, it's best to name one or the other.
+    # Because there are workarounds required when the user is named other than postgres, to keep things simple, I'll just use the default user and make sure there is a good password.
+    # <Postgres database user was here prior to security update>
+
+    # The database password is a required parameter.
+    # "trust" authentication is set up by default on the database service, which means anyoneone who has access to that container is assumed to also be authorized to access the database, so no password will be required.
+    # However, we need this password when connecting from outside the container, so it will be needed from the Django settings file
+    # <Postgres database password was here prior to security update>
+
+    # By default this is md5, which is the "intermediate" form of security available. I should consider upgrading to scram_sha256 later as it is the most secure.
+    # https://www.postgresql.org/docs/current/auth-password.html
+    # POSTGRES_HOST_AUTH_METHOD
+    env_file:
+      - ./Database/env/.env.dev
+    ports:
+      - 5432:5432
+    container_name: dev-db
+    volumes:
+      # the name of the host source container is postgres_data. The container-destination is the second part. This will be where the data will be stored on my local machine.
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+  backend:
+    volumes:
+      - ./Backend:/backend
+    container_name: prod-backend
+    command: gunicorn config.wsgi
+    # Sets the service's environment variables. Use '.env.prod' for production:
+    env_file:
+      - ./Backend/env/.env.prod
+    # Volumes are mounted, meaning any changes made on the host machine will be reflected in the containers which mount the volume
+    # [source]:[target] Meaning, that the backend folder in the container is bind mounted to the backend directory
+    ports:
+      - 8000:8000
+    networks:
+      - default
+  frontend:
+    volumes:
+      - ./Frontend:/frontend
+    command: serve -l 5001 -s build
+    container_name: prod-frontend
+    ports:
+      - 5001:5001
+    depends_on:
+      - backend
+    networks:
+      - default
+  # for when the time comes.
+  # the book says we need a volume within the db service and a volume outside of the db service...
+      # it's totally possible to just create a new volume every time, but it's simple extension of code to make it so that the volume is available to multiple services.
+      # For example, what if we wanted another container that backs up the data of the volume?
+      # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
+  nginx:
+    image: tieje/nginx:latest
+    container_name: prod-nginx
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "89:89"
+    depends_on:
+      - frontend
+    networks:
+      - default
+    volumes:
+      - ./nginx/sites-available/:/etc/nginx/conf.d/sites-available
+      - ./Backend/staticfiles:/Backend/staticfiles
+volumes:
+  # Creates a new named volume managed by Docker. This is where the database's persistent data files will be saved.
+  postgres_data:
+
+networks:
+  default:

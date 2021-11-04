@@ -1,0 +1,27 @@
+---
+- name: create user thomasfrancis
+  hosts: all
+  vars:
+    password: yourpasswordhere
+  tasks:
+    - name: create users
+      become: yes
+      user:
+        name: thomasfrancis
+        comment: thomasfrancis
+        groups: pi,adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,lpadmin,gpio,i2c,spi
+        shell: /bin/bash
+        password: "{{ password | password_hash('sha512') }}"
+        skeleton: yes
+    - name: copy authorized keys from pi
+      become: yes
+      command: cp -R /home/pi/.ssh /home/thomasfrancis/.ssh
+
+# run with
+# ansible-playbook $ANSIBLE_TASKS/create-user-tf.yml -u pi -i $ANSIBLE_HOSTS
+# check with
+# ansible -u pi -i $ANSIBLE_HOSTS all -a "getent passwd"
+# restart
+# ansible -u pi -i $ANSIBLE_HOSTS all -a "sudo shutdown -r now"
+# delete thomasfrancis
+# ansible -u pi -i $ANSIBLE_HOSTS all --become -a "userdel -f thomasfrancis"

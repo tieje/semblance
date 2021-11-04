@@ -1,0 +1,35 @@
+- name: clone the yorha and semblance-secrets repos. Copy the semblance secrets to their appropriate folders
+  hosts: all
+  tasks:
+    - name: clone yorha repo
+      git:
+        repo: https://tieje:[your-key]@github.com/tieje/yorha.git
+        dest: /home/thomasfrancis/yorha
+        clone: yes
+    - name: clone semblance-secrets repo
+      git:
+        repo: https://tieje:[your-key]@github.com/tieje/semblance-secrets.git
+        dest: /home/thomasfrancis/semblance-secrets
+        clone: yes
+    - name: copy semblance backend secrets to appropriate yorha folders
+      command: cp -R /home/thomasfrancis/semblance-secrets/Backend/env/ /home/thomasfrancis/yorha/Backend/
+    - name: copy semblance database secrets to appropriate yorha folders
+      command: cp -R /home/thomasfrancis/semblance-secrets/Database/env/ /home/thomasfrancis/yorha/Database/
+    - name: check if backend env files exist
+      command: ls -a /home/thomasfrancis/yorha/Backend/env
+      register: backendenv
+    - name: check if database env files exist
+      command: ls -a /home/thomasfrancis/yorha/Database/env
+      register: dbenv
+    - name: show backend env files
+      debug:
+        msg: "{{ backendenv.stdout_lines }}"
+    - name: show database env files
+      debug:
+        msg: "{{ dbenv.stdout_lines }}"
+
+
+# run
+# ansible-playbook $ANSIBLE_TASKS/git-clone-yorha.yml -i $ANSIBLE_HOSTS
+# delete folders for restart
+# ansible -i $ANSIBLE_HOSTS all -a "rm -rf yorha semblance-secrets"

@@ -1,0 +1,37 @@
+10/24/2021
+toj320@gmail.com
+
+# For running on local web servers provided by their respective frameworks
+# docker-compose.yml is the base that contains commands shared by all other compose files
+# docker-compose up automatically runs docker-compose.override.yml file on top of docker-compose.yml.
+# The above functionality is built into docker.
+# You can access the containers from http://localhost:3000 and http://localhost:8000
+
+docker-compose up -d
+or
+docker-compose up -d --build
+
+
+# For running production-like containers that use nginx and gunicorn to serve the frontend and backend, respectively.
+# I'm not sure why nginx leaves up orphan containers that need to be removed with the --remove-orphans flag 😢
+# You can access the containers from http://localhost:80/ and http://localhost:89/api/v1/
+
+docker-compose -f docker-compose.yml -f docker-compose.dev-prod.yml up -d --build
+docker-compose down --remove-orphans
+
+# reloading nginx whenever you make changes to the /nginx/sites-available/semblance.conf file
+docker-compose exec prod-nginx nginx -s reload
+
+
+# For running the real deal when you host elsewhere in the future.
+# Please note that this will either fail or be insecure if the following things are not done:
+
+- backend must be connected to a 3rd-party database hosting service.
+- the server_names in /nginx/sites-available/semblance.conf file must be updated
+- ufw firewall settings must be updated for the nginx container
+- update semblance.us domain name to forward to the IP of our web hosting server
+
+# This is basically untested as of 10/24/2021
+
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+docker-compose down --remove-orphans

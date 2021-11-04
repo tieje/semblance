@@ -1,0 +1,259 @@
+10/29/2021
+
+Setting up 2 rpis to serve a docker swarm.
+Ansible will be used to set up the rpis.
+    x Install git
+    + Clone this repo
+    - Install docker, docker tools, and the visualizer. Create a docker swarm. Docker swarm handles automated load-balancing
+    - create postgreSQL db and a backup on the second server
+    - Set up ufw firewall on the nginx container
+    - set up your router to forward to your ip address
+    - set up your domain with no-ip service to forward to your address
+
+https://howchoo.com/g/njy4zdm3mwy/how-to-run-a-raspberry-pi-cluster-with-docker-swarm
+
+I'll need to learn the following:
+
+- Ansible
+    https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html
+    https://www.tutorialspoint.com/ansible/index.htm
+- Docker Swarm
+    https://docs.docker.com/engine/swarm/
+- ufw firewall
+    https://www.linux.com/training-tutorials/introduction-uncomplicated-firewall-ufw/
+- postgreSQL replication
+    https://www.postgresql.org/docs/13/runtime-config-replication.html
+    https://www.section.io/engineering-education/how-to-replicate-postgresql-database/
+- postgreSQL backup
+    https://www.postgresql.org/docs/9.1/backup-file.html
+
+I'm going to start with Ansible.
+https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html
+
+1. I'll need to run a script that installs Ansible and then have Ansible run a separate script.
+It runs over SSH protocol by default so I don't need to install ansible, but I will need to add my key through a script.
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+The main user guide:
+https://docs.ansible.com/ansible/latest/user_guide/index.html
+Ansible galaxy library collection:
+https://galaxy.ansible.com/
+ssh into rpi after adding ~/.ssh/authorized_keys
+https://thepi.io/how-to-ssh-into-the-raspberry-pi/
+getting started
+https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html
+Ansible command not found
+https://stackoverflow.com/questions/63177609/zsh-command-not-found-ansible-after-pip-installing
+My ansible can be found at:
+ansible --version
+/Users/thomasfrancis/.local/bin/ansible
+Trying to run the correct ansible command
+https://docs.ansible.com/ansible/latest/reference_appendices/general_precedence.html#general-precedence-rules
+I need to supply a password
+# ansible -u pi -i /Users/thomasfrancis/Documents/ansible/hosts -m ping all --ask-pass -c paramiko
+    # does not work
+Because I'll need to supply a password for my servers, I'll just create a playbook and connect that way instead.
+https://docs.ansible.com/ansible/latest/user_guide/connection_details.html#connections
+Decide how you're going to pass in credentials.
+
+
+rpi1
+hostname -I
+192.168.1.33
+192.168.1.34
+public Ip
+96.32.2.83
+ssh pi@192.168.1.33
+ssh pi@192.168.1.34
+either one works
+
+rpi2
+hostname -I
+192.168.1.35
+192.168.1.36
+public Ip
+96.32.2.83
+ssh pi@192.168.1.35
+ssh pi@192.168.1.36
+either one works
+
++ installed ansible on my mac
++ generate rpi ssh key
++ make draft email on gmail with public ssh key. Copy and paste onto the RPIs
++ removed other versions of python
++ add ansible to path in .zshrc
+
+10/31/2021
+
+I'm going to disable password authentication for the servers.
+https://linuxize.com/post/how-to-setup-passwordless-ssh-login/
+It seems like it's more secure since key-based authentication relies on cracking the passphrase on your personal key.
+https://serverfault.com/questions/334448/why-is-ssh-password-authentication-a-security-risk
+I'm gonna add an ssh private key to my mac OS
+https://fplanque.com/dev/mac/secure-ssh-private-keys-on-mac-osx-10-5
+This worked in solving the password problem. I won't need to enter a password anymore.
+Use the --become flag to sudo commands.
+
+
+ssh pi@192.168.1.35
+ssh pi@192.168.1.33
+
++ register ssh private key with my mac
+    ssh-add -k ~/.ssh/rpi
++ ping -m all command on provided inventory
+    ansible -u pi -i ~/Documents/yorha/rpi-hosting/hosts -m ping all
++ use a live command on all nodes
+    ansible -u pi -i ~/Documents/yorha/rpi-hosting/hosts all -a "/bin/ls"
+    # -a is for module arguments
++ change default ansible_python_interpreter from python to python3 as an inventory variable
+    https://docs.ansible.com/ansible-core/2.11/reference_appendices/interpreter_discovery.html
+    https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#adding-variables-to-inventory
++ set up and run an example ansible playbook
+    ansible-playbook ~/Documents/yorha/rpi-hosting/tasks/hello-task.yml -u pi -i ~/Documents/yorha/rpi-hosting/hosts
++ print file name that was created
+    /bin/bash ~/Documents/yorha/rpi-hosting/tasks/print-ls-hello-command.sh
++ delete the hello file that was created
+    ansible-playbook ~/Documents/yorha/rpi-hosting/tasks/delete-hellofiles.yml -u pi -i ~/Documents/yorha/rpi-hosting/hosts
++ test if file exist (it should not)
++ edit default inventory on mac
+    I'm going to export the ansible hosts variable to my hostfile for. I'll change this in the future.
+    https://stackoverflow.com/questions/21958727/where-to-store-ansible-host-file-on-mac-os-x
+    ansible -i $ANSIBLE_HOSTS -m ping all
+    I'll do it this way for now for clarity.
++ Set up pyenv correctly... again
+    https://opensource.com/article/20/4/pyenv
++ create user thomasfrancis using ansible playbook
+    https://linuxize.com/post/how-to-create-users-in-linux-using-the-useradd-command/
+    https://serversforhackers.com/c/create-user-in-ansible
+    I'll need to set up a password, otherwise I won't be able to log in remotely.
+    https://unix.stackexchange.com/questions/108562/is-there-some-default-password-for-a-new-user-in-linux
+    Delete user
+    https://linuxize.com/post/how-to-delete-users-in-linux-using-the-userdel-command/
+    https://docs.ansible.com/ansible/2.3/user_module.html
+    I'll need to encrypt the password upon creation.
+    https://www.edureka.co/community/83388/warning-appears-hashed-argument-encrypted-module-properly
+    I'll need to install passlib python module.
+    Error: crypt.crypt not supported on Mac OS X/Darwin, install passlib python module. crypt.crypt not supported on Mac OS X/Darwin, install passlib python module
+    I needed to install passlib locally on my mac, not on the target machine
+    It works. User thomasfrancis has the same groups as pi and the same authorized_keys so no password needed to login and I don't need to use -u pi anymore as flag.
+    The base commands will be the following from now on:
+    ansible -i $ANSIBLE_HOSTS all
+    ansible $ANSIBLE_TASKS/[playbook] -i $ANSIBLE_HOSTS
+
+11/1/2021
+
+11/2/2021
+
++ set up keychain access on Mac
+    https://support.apple.com/guide/keychain-access/what-is-keychain-access-kyca1083/mac
+    This warning came up:
+    The -K and -A flags are deprecated and have been replaced
+    by the --apple-use-keychain and --apple-load-keychain
+    flags, respectively.  To suppress this warning, set the
+    environment variable APPLE_SSH_ADD_BEHAVIOR as described in
+    the ssh-add(1) manual page.
+    This command worked for me:
+    ssh-add --apple-use-keychain ~/.ssh/rpi
++ use an ansible playbook to setup git config ==> I'll use a one-liner instead of setting up git config.
+    I'll need it because I'll be cloning from a private repo.
+    Looks like I'll use a plugin.
+    https://docs.ansible.com/ansible/latest/collections/community/general/git_config_module.html
+        + ansible-galaxy collection install community.general
+            # already installed
+    Storing credentials is not the way.
+    Instead I'll run the username and password in the https request.
+    https://stackoverflow.com/questions/37841914/how-do-i-pass-username-and-password-while-using-ansible-git-module
+    What occurred instead is I used a one-liner https git clone repo with the username and password included.
+    This was definitely the simplest solution. I did not need to set up git config at all.
++ create a playbook that clones yorha repo and copies .env folders into their respective places
+
+11/3/2021
+I'll need to 
+
+11/4/2021
+
+3pm - currently stuck on how to resolve nginx and docker swarm
+https://www.nginx.com/blog/docker-swarm-load-balancing-nginx-plus/
+It looks like we'll be using virtual IPs from the swarm (VIPs)
+Because of the VIPs, it looks like nginx will be easier to configure and deploy with swarm.
+The main goal right now is to simply deploy the build version of only the frontend. This is to test if this even works.
+This is highly experimental and not production. However, there are certain things that I will keep in production from this experiment.
+
+Experimental:
+- docker hub frontend repo
+- nginx configuration
+Production:
+- docker swarm initialization
+- ufw settings
+- monitoring if its set up
+- semblance.us DNS configuration
+- no-ip DNS configuration
+
+I'll need to do these tasks in the following order:
+
+- fork the current yorha repo into a new semblance repo
+    # worry about the .env files later since you're only working with the frontend
+- edit nginx configuration to point to the VIP of the frontend
+    - study the nginx cookbook to determine what the configuration should look like
+    This is possible because the VIP of containers is not only predictable, but also configurable
+    https://docs.docker.com/engine/swarm/swarm-mode/
+    https://www.thepolyglotdeveloper.com/2017/05/load-balancing-docker-swarm-cluster-nginx-reverse-proxy/
+- upload only the nginx and frontend images to the docker hub repo
+    - learn how to update the docker hub repo image over time
+- use docker swarm on your rpis
+    https://docs.docker.com/get-started/orchestration/
+    https://docs.docker.com/get-started/swarm-deploy/
+    https://docs.docker.com/engine/swarm/
+    https://docs.docker.com/engine/swarm/key-concepts/
+    https://docs.docker.com/engine/swarm/swarm-tutorial/
+    I turns out that I will need ansible to install docker engine on the rpis. I wish I just studied docker swarm instead of using nginx.
+    https://docs.docker.com/engine/install/debian/
+    I will not be using Kubernetes due to its complexity.
+    https://www.ibm.com/cloud/blog/docker-swarm-vs-kubernetes-a-comparison
+    I think I'll use the guide below. 
+    https://howchoo.com/g/njy4zdm3mwy/how-to-run-a-raspberry-pi-cluster-with-docker-swarm
+    - create an ansible command that changes the hostname of rpis
+    https://howchoo.com/pi/how-to-change-the-hostname-of-your-raspberry-pi
+    - create a playbook that installs docker engine on each node
+    https://docs.docker.com/engine/install/debian/
+    - create an ansible command for docker swarm init
+    - copy the output for adding workers here
+    - create an ansible command that adds the visualizer
+- have semblance.us either point or forward to the no-ip address
+- have no-ip address point to the rpi IP address + the appropriate port/domain name
+
+Post-Experiment: Production build
+
+- get postgresql running on rpis using ansible
+    - create a playbook that installs postgresql
+    - create a playbook that creates the user on postgresql necessary for docker
+    - create a playbook that creates the database and starting data ONLY ON ONE NODE
+    - create a playbook that replicates this data from one database to another
+- edit the docker-compose configurations for development and production
+    - remove volumes from production
+- edit nginx container such that it will point to the backend container
+- edit the backend such that it interacts with a real db
+- upload the nginx and backend images to docker-hub
+
+
+
+=============
+BASE COMMANDS
+=============
+ansible -i $ANSIBLE_HOSTS all 
+ansible-playbook $ANSIBLE_TASKS/[playbook] -i $ANSIBLE_HOSTS
+
+===============
+COMMON COMMANDS
+===============
+ssh thomasfrancis@192.168.1.33
+ssh thomasfrancis@192.168.1.35
+sudo shutdown now
+ansible -i $ANSIBLE_HOSTS all -m ping
+sudo shutdown -r now
+
+============
+EXPORT PATHS
+============
+
+export ANSIBLE_HOSTS="$HOME/Documents/yorha/rpi-hosting/hosts"
+export ANSIBLE_TASKS="$HOME/Documents/yorha/rpi-hosting/tasks"

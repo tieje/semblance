@@ -1,0 +1,47 @@
+services:
+  backend:
+    container_name: prod-backend
+    command: gunicorn config.wsgi
+    # Sets the service's environment variables. Use '.env.prod' for production:
+    env_file:
+      - ./Backend/env/.env.prod
+    # Volumes are mounted, meaning any changes made on the host machine will be reflected in the containers which mount the volume
+    # [source]:[target] Meaning, that the backend folder in the container is bind mounted to the backend directory
+    ports:
+      - 8000:8000
+    networks:
+      - default
+  frontend:
+    command: serve -s build
+    container_name: prod-frontend
+    ports:
+      - 5000:5000
+    depends_on:
+      - backend
+    networks:
+      - default
+    expose:
+      - "5000"
+  # for when the time comes.
+  # the book says we need a volume within the db service and a volume outside of the db service...
+      # it's totally possible to just create a new volume every time, but it's simple extension of code to make it so that the volume is available to multiple services.
+      # For example, what if we wanted another container that backs up the data of the volume?
+      # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
+  nginx:
+    image: tieje/nginx:latest
+    container_name: prod-nginx
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "89:89"
+    depends_on:
+      - frontend
+    networks:
+      - default
+    volumes:
+      - ./nginx/sites-available/:/etc/nginx/conf.d/sites-available
+      - ./Backend/staticfiles:/Backend/staticfiles
+networks:
+  default:
