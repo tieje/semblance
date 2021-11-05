@@ -193,6 +193,10 @@ I'll need to do these tasks in the following order:
 + fork the current yorha repo into a new semblance repo
     # worry about the .env files later since you're only working with the frontend
     # I couldn't fork it, so I had to change the folder name and add large folders one a time
+
+11/5/2021
+
+
 - edit nginx configuration to point to the VIP of the frontend
     - study the nginx cookbook to determine what the configuration should look like
     This is possible because the VIP of containers is not only predictable, but also configurable
@@ -200,6 +204,7 @@ I'll need to do these tasks in the following order:
     https://www.thepolyglotdeveloper.com/2017/05/load-balancing-docker-swarm-cluster-nginx-reverse-proxy/
 - upload only the nginx and frontend images to the docker hub repo
     - learn how to update the docker hub repo image over time
+- if you have time today, learn how to get an SSL certificate again
 - use docker swarm on your rpis
     https://docs.docker.com/get-started/orchestration/
     https://docs.docker.com/get-started/swarm-deploy/
