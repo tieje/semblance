@@ -190,8 +190,9 @@ Production:
 
 I'll need to do these tasks in the following order:
 
-- fork the current yorha repo into a new semblance repo
++ fork the current yorha repo into a new semblance repo
     # worry about the .env files later since you're only working with the frontend
+    # I couldn't fork it, so I had to change the folder name and add large folders one a time
 - edit nginx configuration to point to the VIP of the frontend
     - study the nginx cookbook to determine what the configuration should look like
     This is possible because the VIP of containers is not only predictable, but also configurable
