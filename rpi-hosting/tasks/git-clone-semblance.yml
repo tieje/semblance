@@ -1,25 +1,25 @@
-- name: clone the yorha and semblance-secrets repos. Copy the semblance secrets to their appropriate folders
+- name: clone the semblance and semblance-secrets repos. Copy the semblance secrets to their appropriate folders
   hosts: all
   tasks:
-    - name: clone yorha repo
+    - name: clone semblance repo
       git:
-        repo: https://tieje:[your-key]@github.com/tieje/yorha.git
-        dest: /home/thomasfrancis/yorha
+        repo: https://tieje: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@github.com/tieje/semblance.git
+        dest: /home/thomasfrancis/semblance
         clone: yes
-    - name: clone semblance-secrets repo
+    - name: clone semblance-secrets semblance
       git:
-        repo: https://tieje:[your-key]@github.com/tieje/semblance-secrets.git
+        repo: https://tieje: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@github.com/tieje/semblance-secrets.git
         dest: /home/thomasfrancis/semblance-secrets
         clone: yes
-    - name: copy semblance backend secrets to appropriate yorha folders
-      command: cp -R /home/thomasfrancis/semblance-secrets/Backend/env/ /home/thomasfrancis/yorha/Backend/
-    - name: copy semblance database secrets to appropriate yorha folders
-      command: cp -R /home/thomasfrancis/semblance-secrets/Database/env/ /home/thomasfrancis/yorha/Database/
+    - name: copy semblance backend secrets to appropriate semblance folders
+      command: cp -R /home/thomasfrancis/semblance-secrets/Backend/env/ /home/thomasfrancis/semblance/Backend/
+    - name: copy semblance database secrets to appropriate semblance folders
+      command: cp -R /home/thomasfrancis/semblance-secrets/Database/env/ /home/thomasfrancis/semblance/Database/
     - name: check if backend env files exist
-      command: ls -a /home/thomasfrancis/yorha/Backend/env
+      command: ls -a /home/thomasfrancis/semblance/Backend/env
       register: backendenv
     - name: check if database env files exist
-      command: ls -a /home/thomasfrancis/yorha/Database/env
+      command: ls -a /home/thomasfrancis/semblance/Database/env
       register: dbenv
     - name: show backend env files
       debug:
