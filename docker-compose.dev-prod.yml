@@ -28,7 +28,7 @@ services:
   backend:
     volumes:
       - ./Backend:/backend
-    container_name: prod-backend
+    container_name: semblance_backend
     command: gunicorn config.wsgi
     # Sets the service's environment variables. Use '.env.prod' for production:
     env_file:
@@ -37,19 +37,13 @@ services:
     # [source]:[target] Meaning, that the backend folder in the container is bind mounted to the backend directory
     ports:
       - 8000:8000
-    networks:
-      - default
   frontend:
     volumes:
       - ./Frontend:/frontend
     command: serve -l 5001 -s build
-    container_name: prod-frontend
+    container_name: semblance_frontend
     ports:
       - 5001:5001
-    depends_on:
-      - backend
-    networks:
-      - default
   # for when the time comes.
   # the book says we need a volume within the db service and a volume outside of the db service...
       # it's totally possible to just create a new volume every time, but it's simple extension of code to make it so that the volume is available to multiple services.
@@ -57,23 +51,12 @@ services:
       # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
   nginx:
     image: tieje/nginx:latest
-    container_name: prod-nginx
+    container_name: semblance_nginx
     restart: always
     build:
       context: ./nginx
     ports:
       - "80:80"
-      - "89:89"
-    depends_on:
-      - frontend
-    networks:
-      - default
-    volumes:
-      - ./nginx/sites-available/:/etc/nginx/conf.d/sites-available
-      - ./Backend/staticfiles:/Backend/staticfiles
 volumes:
   # Creates a new named volume managed by Docker. This is where the database's persistent data files will be saved.
   postgres_data:
-
-networks:
-  default:

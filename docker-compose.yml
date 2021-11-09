@@ -11,8 +11,6 @@ services:
   frontend:
     build: ./Frontend/
     image: tieje/frontend:latest
-    depends_on:
-      - backend
   # For when the time comes. The book says we need a volume within the db service and a volume outside of the db service...
   # it's totally possible to just create a new volume every time, but it's simple extension of code to make it so that the volume is available to multiple services.
   # For example, what if we wanted another container that backs up the data of the volume?

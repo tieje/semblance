@@ -1,0 +1,34 @@
+11/6/2021
+
+I should probably read the nginx cookbook at night. It's like a manual, but with examples.
+
+start on page 23
+
+
+1. Change the state management system to Apollo
+2. Set up graphql queries to the backend.
+3. Find and set up a 3rd-party database service that you'd like to use for django
+4. Create application data.
+5. Make Gender component stateful.
+6. Add a second gender component for whoever you're looking for.
+7. Make Proximity component stateful.
+8. Results Component
+9. Chat component
+10. Host site online. Learn about networking.
+11. Add SSL certificate.
+12. ufw security
+13. HAproxy or nginx load-balancing.
+14. Login page, logout page, forgot password page, forgot username page, user authentication and emails.
+15. Google maps cluster results (if you can).
+16. Incorporate Stripe payment services.
+17. Improve CSS
+18. Marketing
+19. Write jest, cypress, and django tests
+
+11/8/2021
+
+I have a bit of reading and studying to do tonight. I'll work on nginx tomorrow.
+It would be far better for me to figure out what I'm doing for nginx, networks, and routing first than to experiment.
+
+I'll need to figure out SSL certificates too prior to moving forward...
+

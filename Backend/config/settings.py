@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     '172.18.0.3', # yorha_default (Docker network) IP address for backend
     'backend', # Alias for 172.18.0.3
     'localhost', # Alias for 127.0.0.1, usually
+    'api.localhost',
     ]
 
 INSTALLED_APPS = [

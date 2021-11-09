@@ -29,7 +29,8 @@
         msg: "{{ dbenv.stdout_lines }}"
 
 
+# make sure to remove the http key every time
 # run
-# ansible-playbook $ANSIBLE_TASKS/git-clone-yorha.yml -i $ANSIBLE_HOSTS
+# ansible-playbook $ANSIBLE_TASKS/git-clone-semblance.yml -i $ANSIBLE_HOSTS
 # delete folders for restart
-# ansible -i $ANSIBLE_HOSTS all -a "rm -rf yorha semblance-secrets"
+# ansible -i $ANSIBLE_HOSTS all -a "rm -rf semblance semblance-secrets"

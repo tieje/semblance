@@ -116,3 +116,21 @@ https://pawamoy.github.io/posts/docker-compose-django-postgres-nginx/
 This might be it.
 
 Gottem
+
+11/8/2021
+
+Studying nginx tonight.
+Objectives:
+- set up configuration for nginx such that it acts as a reverse proxy to the frontend and backend for their intended urls.
+- set up ssl certificate on nginx
+- set up ufw as well
+
+https://www.thepolyglotdeveloper.com/2017/05/load-balancing-docker-swarm-cluster-nginx-reverse-proxy/
+
+pg 23
+The sites-available and sites-enabled convention is deprecated. I will no longer use it and instead, I will strictly use the
+nginx.conf file instead.
+
+It seems like the configuration that I'll need for the project should be pretty simple.
+
+The nginx configuration now works for both dev-prod and prod.

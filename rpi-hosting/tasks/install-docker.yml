@@ -2,5 +2,13 @@
   hosts: all
   become: true
   tasks:
-    - name: install docker sdk for python
+    - name: install docker engine on raspbian debian
+      command: curl -sSL https://get.docker.com | sh
+    - name: install docker sdk for python for ansible control
       command: pip install docker docker-compose
+    - name: add user thomasfrancis to the docker group so that commands can run without running as root
+      command: sudo usermod -aG docker thomasfrancis
+
+# ansible-playbook $ANSIBLE_TASKS/install-docker.yml -i $ANSIBLE_HOSTS --ask-become-pass
+# https://www.shellhacks.com/ansible-sudo-a-password-is-required/
+# this script does not work

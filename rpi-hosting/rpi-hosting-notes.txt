@@ -197,15 +197,7 @@ I'll need to do these tasks in the following order:
 11/5/2021
 
 
-- edit nginx configuration to point to the VIP of the frontend
-    - study the nginx cookbook to determine what the configuration should look like
-    This is possible because the VIP of containers is not only predictable, but also configurable
-    https://docs.docker.com/engine/swarm/swarm-mode/
-    https://www.thepolyglotdeveloper.com/2017/05/load-balancing-docker-swarm-cluster-nginx-reverse-proxy/
-- upload only the nginx and frontend images to the docker hub repo
-    - learn how to update the docker hub repo image over time
-- if you have time today, learn how to get an SSL certificate again
-- use docker swarm on your rpis
++ use docker swarm on your rpis
     https://docs.docker.com/get-started/orchestration/
     https://docs.docker.com/get-started/swarm-deploy/
     https://docs.docker.com/engine/swarm/
@@ -217,15 +209,94 @@ I'll need to do these tasks in the following order:
     https://www.ibm.com/cloud/blog/docker-swarm-vs-kubernetes-a-comparison
     I think I'll use the guide below. 
     https://howchoo.com/g/njy4zdm3mwy/how-to-run-a-raspberry-pi-cluster-with-docker-swarm
-    - create an ansible command that changes the hostname of rpis
-    https://howchoo.com/pi/how-to-change-the-hostname-of-your-raspberry-pi
-    - create a playbook that installs docker engine on each node
-    https://docs.docker.com/engine/install/debian/
-    - create an ansible command for docker swarm init
-    - copy the output for adding workers here
-    - create an ansible command that adds the visualizer
-- have semblance.us either point or forward to the no-ip address
-- have no-ip address point to the rpi IP address + the appropriate port/domain name
+    + change the hostname of your rpis. It's significantly easier to do this by hand
+        https://howchoo.com/pi/how-to-change-the-hostname-of-your-raspberry-pi
+        sed -i 's/raspberrypi/manager1/g'
+        https://linuxize.com/post/how-to-use-sed-to-find-and-replace-string-in-files/
+        There are three types of hostnames: user-defined, static (kernel hostname), and transient (network hostname)
+        https://www.redhat.com/sysadmin/change-hostname-linux
+        + rename hostname of .33 rpi to manager1
+        + rename hostname of .35 rpi to worker1
+    x create a playbook that installs docker engine on each node
+        https://docs.docker.com/engine/install/debian/
+        raspbian is an exception where we will need to install docker using the convenience script
+        https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        OR
+        curl -sSL https://get.docker.com | sh
+        I'm going to abandon the playbook in favor of installing it manually myself for now.
+    + install docker using the curl commands above
+    + install python sdk for docker and docker-compose from pip
+        pip3 install docker docker-compose
+    x create an ansible command for docker swarm init
+        since we'll be using the manager node, it's not really worth it to build an ansible command for this
+    + add my user to the docker group on all nodes so I can run without root privileges
+        sudo usermod -aG docker thomasfrancis
+    + create docker swarm with init command on manager1
+        docker swarm init --advertise-addr 192.168.1.33
+    + copy the output for adding workers here
+        docker swarm join --token SWMTKN-1-3t5ux1mlm3fr68tdmefgd36q8l6aoblzi343dyp8kcrfgt57qf-3ztfpdcadcslb9oc8i623wmd3 192.168.1.33:2377
+    + add worker1 as a worker node
+    + add the visualizer service
+        upon restarting both nodes, it turns out the swarm does automatically startup which may mean the same for services.
+        It doesn't seem like services have too much of the overhead of containers.
+        http://192.168.1.33:8080
+        command used:
+        sudo docker service create \
+                --name viz \
+                --publish 8080:8080/tcp \
+                --constraint node.role==manager \
+                --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+                alexellis2/visualizer-arm:latest
++ have no-ip address point to the rpi IP address + the appropriate port/domain name
+    http://semblance.ddns.net/
+    had to set up port forwarding from my router. My IP address is likely dynamic so I'll need to update my changes.
++ have semblance.us either point or forward to the no-ip address
++ edit nginx configuration to point to the VIP of the frontend
+    ~ study the nginx cookbook to determine what the configuration should look like
+    This is possible because the VIP of containers is not only predictable, but also configurable
+    https://docs.docker.com/engine/swarm/swarm-mode/
+    https://www.thepolyglotdeveloper.com/2017/05/load-balancing-docker-swarm-cluster-nginx-reverse-proxy/
+    The default address pool for docker swarm is 10.0.0.0/8
+    I'll use this default pool for now.
+    The swarm is set up. The visualizer is already running on port 8080 so I'll the nginx service on port 8081
+    I figured out most of the nginx part. Instead of port forwarding to port 8080 on my router, I'll need to forward to port 80 since this is what nginx is listening on.
+    I'll create a separate server configuration for the visualizer since I like it.
+    One way that this method would not work is there were many servers.
+    For now, I don't really need to use the VIP of services.
+    If I were to truly scale, I would use the VIP of services
+- upload only the nginx and frontend images to the docker hub repo
+    ~ learn how to update the docker hub repo image over time
+        # I'm guessing that all I need to do is rebuild the image and keep pushing it up
+    x create the docker service statements or the stack deploy statements
+        x it seems like all I really need is a single .yml file for a stack deploy statement
+            scp docker-compose.prod.yml thomasfrancis@192.168.1.33:/home/thomasfrancis
+            It's not enough. I'll need the dockerfile to actually get anything in there.
+        https://stackoverflow.com/questions/48962399/no-suitable-node-unable-to-deploy-image-using-docker-service
+        docker stack deploy --compose-file docker-compose.prod.yml --resolve-image never semblance 
+        https://docs.docker.com/engine/reference/commandline/stack_deploy/
+        There are 0/1 replicas so that's not good.
+        https://florianmuller.com/build-a-raspberry-pi-4-docker-swarm-cluster-with-four-nodes-and-deploy-traefik-with-portainer
+        I think I'll try using services instead of stack deploy
+    - create the docker service statement
+        https://docs.docker.com/engine/reference/commandline/service_create/
+        The main issue is that the node label must be updated for the designation of running such services.
+        The service can run on both manager1 and worker1 so I'll add those labels.
+        https://stackoverflow.com/questions/42414703/how-to-list-docker-swarm-nodes-with-labels
+
+docker service create \
+--replicas 1 \
+--name semblance_frontend \
+--no-resolve-image \
+-p 5001:5001 \
+tieje/frontend
+
+docker service create \
+--replicas 1 \
+--name semblance_nginx \
+--no-resolve-image \
+-p 5001:5001 \
+tieje/nginx
 
 Post-Experiment: Production build
 
@@ -239,6 +310,18 @@ Post-Experiment: Production build
 - edit nginx container such that it will point to the backend container
 - edit the backend such that it interacts with a real db
 - upload the nginx and backend images to docker-hub
+- use docker swarm to spin up the nginx and backend containers
+- learn how to get an ssl certificate and install it
+    https://certbot.eff.org/lets-encrypt/debianbuster-nginx
+    I wonder if I'll need to set up the ssl cert on the rpi or the nginx container?
+    https://stackoverflow.com/questions/26028971/docker-container-ssl-certificates
+    I guess they use a volume for certs... but that doesn't seem right. I'll need to figure out how ssl certs work?
+    The big idea is that the ssl cert should be a reflection of the physical server not, the container.
+    https://stackoverflow.com/questions/52244214/installing-ssl-cert-in-docker-swarm
+    https://scalified.com/2018/10/08/building-jenkins-pipelines-docker-swarm/
+    This is one method:
+    https://finnian.io/blog/ssl-with-docker-swarm-lets-encrypt-and-nginx/
+    I'll keep the above method in mind, but this is something that I'll do later.
 
 
 
@@ -251,6 +334,7 @@ ansible-playbook $ANSIBLE_TASKS/[playbook] -i $ANSIBLE_HOSTS
 ===============
 COMMON COMMANDS
 ===============
+http://192.168.1.33:8080
 ssh thomasfrancis@192.168.1.33
 ssh thomasfrancis@192.168.1.35
 sudo shutdown now

@@ -33,5 +33,5 @@ docker-compose exec prod-nginx nginx -s reload
 
 # This is basically untested as of 10/24/2021
 
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml up -d --build
 docker-compose down --remove-orphans
