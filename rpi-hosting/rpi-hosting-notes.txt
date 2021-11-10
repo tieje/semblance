@@ -273,30 +273,89 @@ I'll need to do these tasks in the following order:
             scp docker-compose.prod.yml thomasfrancis@192.168.1.33:/home/thomasfrancis
             It's not enough. I'll need the dockerfile to actually get anything in there.
         https://stackoverflow.com/questions/48962399/no-suitable-node-unable-to-deploy-image-using-docker-service
-        docker stack deploy --compose-file docker-compose.prod.yml --resolve-image never semblance 
+        docker stack deploy --compose-file docker-compose.prod.yml semblance 
         https://docs.docker.com/engine/reference/commandline/stack_deploy/
         There are 0/1 replicas so that's not good.
         https://florianmuller.com/build-a-raspberry-pi-4-docker-swarm-cluster-with-four-nodes-and-deploy-traefik-with-portainer
         I think I'll try using services instead of stack deploy
-    - create the docker service statement
+    x create the docker service statement
         https://docs.docker.com/engine/reference/commandline/service_create/
         The main issue is that the node label must be updated for the designation of running such services.
         The service can run on both manager1 and worker1 so I'll add those labels.
         https://stackoverflow.com/questions/42414703/how-to-list-docker-swarm-nodes-with-labels
 
+The experiment has failed. I've given up due to incompatibility issues.
+I was really hoping that I could get it off the ground, but I've determined a simpler solution without using docker swarm.
+In the future, I'll need to practice creating docker swarm on my linux desktop just to see if things will work.
+The rpi architecture and my own architecture has just gotten in the way... too much.
+
 docker service create \
 --replicas 1 \
 --name semblance_frontend \
---no-resolve-image \
 -p 5001:5001 \
 tieje/frontend
 
 docker service create \
 --replicas 1 \
 --name semblance_nginx \
---no-resolve-image \
 -p 5001:5001 \
 tieje/nginx
+
+The main issue is likely a dependency issue. Certain packages don't translate well on the RPI.
+I guess that part should not matter...
+I want to give up, but somehow the visualizer is working. And I don't know how.
+
+I'm going to try to run the nginx image directly on the pi and see what happens.
+
+docker run -p 5001:5001 -d --platform=linux/arm/v7 tieje/frontend "npm i && && serve -l 5001 -s build"
+docker run -it -p 80:80 -d --platform=linux/arm/v7 tieje/frontend /bin/bash
+
+docker run -p 80:80 -d --platform=linux/arm/v7 tieje/nginx /bin/bash
+docker exec -it 46fcc926a500 /bin/bash
+
+I received the following error. I rebuilt the image and pushed it to docker hub.
+In retrospect, I could have just specified it here in the docker run command
+WARNING: The requested image's platform (linux/arm64/v8) does not match the detected host platform (linux/arm/v7) and no specific platform was requested
+https://docs.docker.com/desktop/multi-arch/
+I'm going to build a builder so that I can build for linux/arm/v7
+docker buildx build --platform linux/arm/v7 -t tieje/reverseproxy:latest --push ./nginx
+I created a new builder called Armv7builder. I didn't give it any specifications but it appears to build for other architectures.
+docker buildx build --platform linux/arm/v7 -t tieje/frontend:latest --push ./Frontend
+
+docker exec -it fcde6ea3278d /bin/bash
+ran npm start from inside. I curled the localhost:3000 but it did not work...
+I'll edit the Dockerfile with a command to run npm start or the serve command.
+I need to know the difference between "RUN" and "CMD" in the Dockerfile
+
+I want to try pushing the compose. That might make a difference.
+I'm trying to make my Dockerfiles run as standalone containers on their own now. I guess only the frontend.
+I need to rethink how I build Dockerfiles
+I want to try running docker-compose create since it creates a service for a docker swarm.
+docker-compose create command is deprecated.
+docker stack deploy --compose-file docker-compose.prod.yml semblance
+And I was gonna give up. It works now. Well that was easy.
+I have no idea how the builder works, but it was integral to getting this done correctly.
+I'll need to comment out the container for now so that the load balancer works.
+
+docker buildx build --platform linux/arm/v7 -t tieje/reverseproxy:2 --push ./nginx
+docker buildx build --platform linux/arm/v7 -t tieje/frontend:2 --push ./Frontend
+I think pushing it to dockerhub works, but I'll need to something else to update it locally.
+https://stackoverflow.com/questions/50936208/how-can-i-update-the-latest-image-that-my-docker-service-stack-uses
+What I'm looking for is optimizing performance of nginx:
+https://stackoverflow.com/questions/54059581/deploy-react-with-nginx-failed-to-load-resources
+https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/
+turning on sendfile, tcp_noopush and tcp_nodelay
+Minimal performace enhancement.
+The real issue is that I'm running a real build.
+Didn't know I could do this: https://mherman.org/blog/dockerizing-a-react-app/
+https://bogotobogo.com/DevOps/Docker/Docker-React-App.php
+It looks like everyone has been doing it the same way.
+And it makes sense. I do something very similar with the backend where gunicorn handles hosting.
+It's likely that I've been going about this the wrong way the whole time.
+I'll try it the "right" way.
+docker build -f Dockerfile -t tieje/frontend:2 .
+I learned so much today it's pretty insane. But hey. It works. And I'm not afraid to implement the nginx reverse proxy later. I'm sooooo taking a day off tomorrow.
+11/10/2021
 
 Post-Experiment: Production build
 
