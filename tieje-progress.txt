@@ -24,6 +24,8 @@ start on page 23
 17. Improve CSS
 18. Marketing
 19. Write jest, cypress, and django tests
+20. Create database backups
+    https://sqlbak.com/blog/how-to-automate-postgresql-database-backups-in-linux
 
 11/8/2021
 

@@ -359,17 +359,136 @@ I learned so much today it's pretty insane. But hey. It works. And I'm not afrai
 
 Post-Experiment: Production build
 
-- get postgresql running on rpis using ansible
-    - create a playbook that installs postgresql
-    - create a playbook that creates the user on postgresql necessary for docker
-    - create a playbook that creates the database and starting data ONLY ON ONE NODE
-    - create a playbook that replicates this data from one database to another
-- edit the docker-compose configurations for development and production
-    - remove volumes from production
+The order of deployment will be:
+1. Database
+2. Backend
+3. Reversse-proxy
+4. Firewall
+
+11/11/2021
+
+x get postgresql running on rpis using ansible
++ set up postgresql db on worker1
+    x create a playbook that installs postgresql
+    x create a playbook that creates the user on postgresql necessary for docker
+    x create a playbook that creates the database and starting data ONLY ON ONE NODE
+    x create a playbook that replicates this data from one database to another
+    I probably won't create any playbooks mostly because I don't really need to.
+    This is a decent guide. I'll need to see what others say.
+    https://kb.objectrocket.com/postgresql/how-to-install-and-set-up-postgresql-on-a-raspberry-pi-part-2-1165
+    This is a more basic method. It's less about messing around with configuration and network files though.
+    I don't think I'll be using it.
+    https://pimylifeup.com/raspberry-pi-postgresql/
+    This is a decent guide because it actually explains what things means while setting up a configurations.
+    https://bpwalters.com/blog/setting-up-postgresql-on-raspberry-pi/
+    The best thing to do, might actually be to dedicate an entire RPI for all my database needs.
+    In other words, I should be able to access that database from a backend container running on my laptop.
+    This would allow me to experiment with the backend configuration without setting up a container on the RPI itself.
+    I won't need the pgAdmin GUI.
+    I believe that I've determined the resources that I'll use. I need to answer the following questions now:
+    Why install postgresql-contrib as well?
+    Why check the status of Postgres clusters with the pg_clusters command.
+    Why copy pg_hba.conf path?
+        This controls client authentication.
+        We're whitelisting IP addresses to allow access.
+    What does the postgresql.conf file do?
+        Again, we're whitelisting IP addresses.
+        This allows the postgresql server to accept connections from my IPs.
+    postgresql.conf specifies a list of addresses so the server accepts incoming connections from specified IPs
+    pg_hba.conf controls access at a finer grained level for which IPs the server will accept logins from for specific dbs and users
+    postgresql.conf is for general traffic.
+    pg_hba.conf is for who is allowed direct control from login.
+    Generally, it seems like a good idea to whitelist all of my IPs on my network just in case I get any new computers.
+    I only accept and forward port 80 external connections anyways so it should be relatively secure.
+    The only way for someone to get into the database is for them join the network on my router.
+    postgresql-contrib is contributed extensions and additions to postgresql.
+    I will be needing extensions like gis, so perhaps I may need to install even more...
+    postgis makes this a bit more difficult actually.
+    + build out the installation command
+        How to install postgis on postgresql
+        https://raspberrypi.stackexchange.com/questions/71144/installing-postgis-on-raspberry-pi-to-postgresql-9-6
+        On libpq-dev:
+        https://pypi.org/project/libpq-dev/
+        sudo apt-get install postgresql postgresql-contrib postgis libpq-dev -y
+    + run installation command on worker1. This will be the dedicated postgreSQL db server for all my applications.
+        It's installed but it's not running, which is fine.
+    + run postgresql
+        pg_lsclusters
+        location of the log just in case you need to view it if the db cluster goes down or is having problems
+        /var/log/postgresql/postgresql-11-main.log
+        data directory
+        /var/lib/postgresql/11/main
+        pg_hba.conf
+        /etc/postgresql/11/main/pg_hba.conf
+        postgresql.conf
+        /etc/postgresql/11/main/postgresql.conf
+    + make a backup of both original configurations
+        sudo cp [original config] [original config .bak]
+        sudo cp /etc/postgresql/11/main/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf.bak
+        sudo cp /etc/postgresql/11/main/postgresql.conf /etc/postgresql/11/main/postgresql.conf.bak
+    + edit the pg_hba.conf and postgres.conf files
+        I have two password security layers protecting access to the database. I think that's good enough.
+        sudo emacs /etc/postgresql/11/main/pg_hba.conf
+        grep -n "listen_addresses =" /etc/postgresql/11/main/postgresql.conf
+        sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/11/main/postgresql.conf
+        sudo emacs /etc/postgresql/11/main/postgresql.conf
+    + reload the server
+        sudo service postgresql restart
++ set up the backend to use the worker1 db
+    This gives a pretty succinct answer for why PostgreSQL is better than MySQL
+    https://www.askpython.com/django/django-postgresql
+    I have already created the password and saved it on my password manager and semblance secrets.
+    I'll need to create a user and a database. The user will need the appropriate permissions that django will need.
+    + create a user called thomas
+        sudo -u postgres psql
+        alter role postgres with password 'eLEO4Wo6S3ZSe5OXLFS%VK';
+        CREATE USER thomas WITH LOGIN PASSWORD 'eLEO4Wo6S3ZSe5OXLFS%VK';
+    + add roles to user thomas
+        alter role thomas with password 'eLEO4Wo6S3ZSe5OXLFS%VK';
+        alter role thomas with superuser;
+    + create a database called semblance_db
+        CREATE DATABASE semblance_db WITH OWNER=thomas;
+        I had to change pg_hba.conf from peer to md5
+    + change database settings backend
+    + create new docker-compose file just to run the backend
+    + troubleshoot database connection for django
+        It turns out that postgresql only accepts unix-domain connections by default
+        http://nst.sourceforge.net/nst/docs/faq/ch06s02.html
+        sudo grep -n "PGOPTS" /etc/postgresql/11/main/postgresql.conf
+        sudo grep -n "PGPORT" /etc/postgresql/11/main/postgresql.conf
+        sudo grep -n "PORT" /etc/postgresql/11/main/postgresql.conf
+        It looks like it doesn't exist as a setting.
+        Before I make the changes, I'd like to try some things.
+        I think postgresql is listening to the right port, it has the right name, and tcp/ip connection should be allowed.
+        I'm going to install ufw and open up the port.
+        https://pimylifeup.com/raspberry-pi-ufw/
+        psql -d semblance_db -U thomas
+        This command helped me figure out that I did not uncomment out listen_addresses in the postgresql.conf file.
+        show listen_addresses;
++ create the nginx configuration file for the frontend such that it points to the backend and visualizer
+    https://stackoverflow.com/questions/52073803/how-to-do-nginx-reverse-proxy-to-docker-services-app-created-in-docker-swarm
+    The alternative solution is over-engineered.
+    The easier solution would be to simply port forward connections to ports 8000 and 8080.
+    I didn't really understand why nginx -g daemon off command was used.
+    https://stackoverflow.com/questions/18861300/how-to-run-nginx-within-a-docker-container-without-halting
+    Decent article. Docker has advanced networking capabilities that I should take advantage of.
+    https://semaphoreci.com/community/tutorials/consuming-services-in-a-docker-swarm-mode-cluster
+    I could either create an overlay network and run the backend service separately from the frontend.
+    OR I could take advantage of multi-stage builds to run the frontend and backend all in one container.
+    It's not a good idea to combine the frontend and backend because docker containers were meant to do only one thing each.
+    Another method would be to use the Swarm load balancer itself to connect to replicas, which would be preferable...
+    There are several ways to do this, but I feel like the most organic would to use the real IP address.
+- rebuild the semblance service to include the backend
+    docker-compose -f docker-compose.prod.yml up -d --build
+    docker buildx build --platform linux/arm/v7 -t tieje/frontend:4 --push ./Frontend
+    docker buildx build --platform linux/arm/v7 -t tieje/backend:1 --push ./Backend
+    scp docker-compose.prod.yml thomasfrancis@192.168.1.33:/home/thomasfrancis
+    docker stack rm semblance
+    cp -r $HOME/semblance-secrets/Backend/env/ $HOME/semblance/Backend/
+    docker stack deploy --compose-file docker-compose.prod.yml semblance
+    Early testing with the visualizer shows that it actually works.
+
 - edit nginx container such that it will point to the backend container
-- edit the backend such that it interacts with a real db
-- upload the nginx and backend images to docker-hub
-- use docker swarm to spin up the nginx and backend containers
 - learn how to get an ssl certificate and install it
     https://certbot.eff.org/lets-encrypt/debianbuster-nginx
     I wonder if I'll need to set up the ssl cert on the rpi or the nginx container?

@@ -27,7 +27,6 @@ docker-compose exec prod-nginx nginx -s reload
 # Please note that this will either fail or be insecure if the following things are not done:
 
 - backend must be connected to a 3rd-party database hosting service.
-- the server_names in /nginx/sites-available/semblance.conf file must be updated
 - ufw firewall settings must be updated for the nginx container
 - update semblance.us domain name to forward to the IP of our web hosting server
 
@@ -35,3 +34,7 @@ docker-compose exec prod-nginx nginx -s reload
 
 docker-compose -f docker-compose.prod.yml up -d --build
 docker-compose down --remove-orphans
+
+# For only running the backkend
+
+docker-compose -f docker-compose.backend.yml up -d --build

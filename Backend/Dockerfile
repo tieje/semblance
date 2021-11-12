@@ -26,3 +26,4 @@ RUN /usr/local/bin/python -m pip install --upgrade pip\
 # The current directory will be backend on my local computer.
 COPY . /backend
 EXPOSE 8000
+CMD ["gunicorn", "config.wsgi"]

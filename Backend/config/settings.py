@@ -32,6 +32,8 @@ ALLOWED_HOSTS = [
     'backend', # Alias for 172.18.0.3
     'localhost', # Alias for 127.0.0.1, usually
     'api.localhost',
+    '192.168.1.33'
+    '192.168.1.35'
     ]
 
 INSTALLED_APPS = [
@@ -143,10 +145,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'postgres',
-        'USER': 'postgres',
+        'NAME': 'semblance_db',
+        'USER': 'thomas',
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
+        'HOST': '192.168.1.35',
         'PORT': '5432',
     }
 }

@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./Backend
+    volumes:
+      - ./Backend:/backend
+    container_name: semblance_backend
+    command: gunicorn config.wsgi
+    env_file:
+      - ./Backend/env/.env.prod
+    ports:
+      - 8000:8000

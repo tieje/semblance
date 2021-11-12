@@ -21,5 +21,6 @@ ENV PATH /frontend/node_modules/.bin:$PATH
 # production environment
 FROM nginx:latest
 COPY --from=build /frontend/build /usr/share/nginx/html
+COPY --from=build /frontend/nginx /etc/nginx
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
