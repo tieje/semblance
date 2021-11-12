@@ -32,8 +32,10 @@ ALLOWED_HOSTS = [
     'backend', # Alias for 172.18.0.3
     'localhost', # Alias for 127.0.0.1, usually
     'api.localhost',
-    '192.168.1.33'
-    '192.168.1.35'
+    '192.168.1.33',
+    '192.168.1.35',
+    'api.semblance.us',
+    'semblance.us',
     ]
 
 INSTALLED_APPS = [
@@ -220,6 +222,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://semblance.us',
+    'http://api.semblance.us',
 )
 
 

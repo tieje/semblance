@@ -480,13 +480,26 @@ x get postgresql running on rpis using ansible
     There are several ways to do this, but I feel like the most organic would to use the real IP address.
 - rebuild the semblance service to include the backend
     docker-compose -f docker-compose.prod.yml up -d --build
-    docker buildx build --platform linux/arm/v7 -t tieje/frontend:4 --push ./Frontend
-    docker buildx build --platform linux/arm/v7 -t tieje/backend:1 --push ./Backend
+    docker buildx build --platform linux/arm/v7 -t tieje/frontend:5 --push ./Frontend
+    docker buildx build --platform linux/arm/v7 -t tieje/backend:3 --push ./Backend
     scp docker-compose.prod.yml thomasfrancis@192.168.1.33:/home/thomasfrancis
+    scp docker-compose.prod.yml thomasfrancis@192.168.1.33:/home/thomasfrancis/semblance
     docker stack rm semblance
     cp -r $HOME/semblance-secrets/Backend/env/ $HOME/semblance/Backend/
+    cp docker-compose.prod.yml $HOME/semblance/docker-compose.prod.yml
     docker stack deploy --compose-file docker-compose.prod.yml semblance
     Early testing with the visualizer shows that it actually works.
+    - troubleshoot django
+        It turns out that django doesn't serve files itself.
+        https://www.digitalocean.com/community/questions/digital-ocean-django-nginx-error-not-found-the-requested-resource-was-not-found-on-this-server
+        I totally forgot that django and nginx don't really go well together.
+        https://medium.com/analytics-vidhya/dajngo-with-nginx-gunicorn-aaf8431dc9e0
+        https://mattsegal.dev/nginx-django-reverse-proxy-config.html
+        I'll need to troubleshoot it some more, but at the very least, I have three working URLS
+        http://semblance.us
+        http://visual.semblance.us
+        http://192.168.1.33:8000/api/v1/
+10/12/2021
 
 - edit nginx container such that it will point to the backend container
 - learn how to get an ssl certificate and install it
