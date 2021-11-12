@@ -2,14 +2,14 @@ version: '3.9'
 
 services:
   frontend:
-    image: tieje/frontend:5
+    image: tieje/frontend:6
     container_name: semblance_frontend
     build:
       context: ./Frontend
     ports:
       - 80:80
   backend:
-    image: tieje/backend:3
+    image: tieje/backend:4
     build:
       context: ./Backend
     volumes:
