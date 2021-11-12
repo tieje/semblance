@@ -495,11 +495,40 @@ x get postgresql running on rpis using ansible
         I totally forgot that django and nginx don't really go well together.
         https://medium.com/analytics-vidhya/dajngo-with-nginx-gunicorn-aaf8431dc9e0
         https://mattsegal.dev/nginx-django-reverse-proxy-config.html
-        I'll need to troubleshoot it some more, but at the very least, I have three working URLS
-        http://semblance.us
-        http://visual.semblance.us
-        http://192.168.1.33:8000/api/v1/
-10/12/2021
+        I'll need to troubleshoot it some more.
+        I feel like proxy passing isn't worth it. Unfortunately, there doesn't seem to be a way around it.
+        I have a sinking feeling that I won't be able to figure this one out. :(
+        10/12/2021
+        I'll keep the above method in mind, but this is something that I'll do later.
+        + reserve ip addresses on your router. For some reason, some IP addresses get reassigned.
+        I'm thinking of performing a multi-stage build for the backend.
+        I can't rely on the nginx of the frontend container to serve the files of the backend.
+        It seems like I might need to use ansible to keep a copy of the application on all servers.
+        This configuration may be more complex than what I actually need.
+        https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html
+        I like what's happening here.
+        https://mattsegal.dev/nginx-django-reverse-proxy-config.html
+        The api needs to be free-standing, so I will definitely be performing a multi-stage build with nginx.
+        nginx web server documentation
+        https://docs.nginx.com/nginx/admin-guide/web-server/web-server/
+        + remove backend from the frontend nginx.conf
+        + create backend nginx.conf
+        + create multi-stage build docker file so that nginx will serve wsgi
+        x test locally with docker-compose.backend.yml. Does api.localhost work?
+        Experiment failed. It's not a particularly good idea at all since I'll need to set up a reverse proxy anyways.
+        + use the frontend container as a reverse proxy for the backend
+            The experiment was successfully locally with docker compose.
+            I might just need to figure out how docker swarm services can communicate and have nginx be forwarded to the right service.
+        - figure out how to allow nginx to connect to a service
+            This might be a viable solution.
+            https://tech-related.com/p/VfaQyu9S4M
+            Informational about how the docker swarm ingress overlay network works.
+            https://stackoverflow.com/questions/46546497/how-to-change-the-service-name-generated-by-docker-stack-in-docker-compose
+            It might just work out of the box already.
+                docker-compose -f docker-compose.prod.yml up -d --build
+                docker buildx build --platform linux/arm/v7 -t tieje/frontend:5 --push ./Frontend
+                docker buildx build --platform linux/arm/v7 -t tieje/backend:3 --push ./Backend
+                docker stack deploy --compose-file docker-compose.prod.yml semblance
 
 - edit nginx container such that it will point to the backend container
 - learn how to get an ssl certificate and install it
@@ -512,9 +541,7 @@ x get postgresql running on rpis using ansible
     https://scalified.com/2018/10/08/building-jenkins-pipelines-docker-swarm/
     This is one method:
     https://finnian.io/blog/ssl-with-docker-swarm-lets-encrypt-and-nginx/
-    I'll keep the above method in mind, but this is something that I'll do later.
-
-
+    
 
 =============
 BASE COMMANDS
