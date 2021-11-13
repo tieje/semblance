@@ -565,8 +565,8 @@ Experiments have been successful.
 The frontend still lives.
 - deploy semblance stack on docker swarm
     + push the backend and reverseproxy images to dockerhub
-        docker buildx build --platform linux/arm/v7 -t tieje/backend:10 --push ./Backend
-        docker buildx build --platform linux/arm/v7 -t tieje/frontend:10 --push ./Frontend
+        docker buildx build --platform linux/arm/v7 -t tieje/backend:11 --push ./Backend
+        docker buildx build --platform linux/arm/v7 -t tieje/frontend:11 --push ./Frontend
     + remove old semblance stack and network
         docker stack rm semblance
     + push changes to git and pull them on the rpis
