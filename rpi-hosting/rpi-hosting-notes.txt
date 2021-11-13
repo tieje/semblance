@@ -576,7 +576,8 @@ The frontend still lives.
         docker service update --image tieje/frontend:10 semblance_frontend
         Instead of an upstream backend, I might just use the gunicorn port directly
         https://serverfault.com/questions/960131/nginx-docker-and-gunicorn-url-without-the-port-number-in-the-url
-        
+        - copy correct .env files from semblance secrets
+            cp -r $HOME/semblance-secrets/Database/env/ $HOME/semblance/Database/
 - edit nginx container such that it will point to the backend container
 - learn how to get an ssl certificate and install it
     https://certbot.eff.org/lets-encrypt/debianbuster-nginx
