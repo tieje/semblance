@@ -565,14 +565,14 @@ Experiments have been successful.
 The frontend still lives.
 - deploy semblance stack on docker swarm
     + push the backend and reverseproxy images to dockerhub
-        docker buildx build --platform linux/arm/v7 -t tieje/backend:9 --push ./Backend
+        docker buildx build --platform linux/arm/v7 -t tieje/backend:10 --push ./Backend
         docker buildx build --platform linux/arm/v7 -t tieje/frontend:10 --push ./Frontend
     + remove old semblance stack and network
         docker stack rm semblance
     + push changes to git and pull them on the rpis
     - update/deploy new stack
         docker stack deploy --compose-file docker-compose.prod.yml semblance 
-        docker service update --image tieje/backend:9 semblance_backend
+        docker service update --image tieje/backend:10 semblance_backend
         docker service update --image tieje/frontend:10 semblance_frontend
         Instead of an upstream backend, I might just use the gunicorn port directly
         https://serverfault.com/questions/960131/nginx-docker-and-gunicorn-url-without-the-port-number-in-the-url
