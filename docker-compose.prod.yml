@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   backend:
-    image: tieje/backend:10
+    image: tieje/backend:9
     build:
       context: ./Backend
     container_name: semblance_backend
@@ -11,7 +11,7 @@ services:
     networks:
       - semblance-net
   frontend:
-    image: tieje/frontend:8
+    image: tieje/frontend:9
     container_name: semblance_frontend
     build:
       context: ./frontend
