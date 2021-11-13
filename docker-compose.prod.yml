@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   backend:
-    image: tieje/backend:10
+    image: tieje/backend:11
     build:
       context: ./Backend
     container_name: semblance_backend
