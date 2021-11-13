@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   backend:
-    image: tieje/backend:8
     build:
       context: ./Backend
     container_name: semblance_backend
@@ -10,10 +9,7 @@ services:
       - ./Backend/env/.env.prod
     ports:
       - 8000:8000
-    networks:
-      - semblance-net
   frontend:
-    image: tieje/frontend:7
     container_name: semblance_frontend
     build:
       context: ./frontend
@@ -23,8 +19,3 @@ services:
       - ./Backend/static:/static
       - ./Frontend/nginx.conf:/etc/nginx/nginx.conf
       - ./Frontend/build/:/usr/share/nginx/html
-    networks:
-      - semblance-net
-networks:
-  semblance-net:
-    driver: overlay

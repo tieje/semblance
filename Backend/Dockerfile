@@ -1,6 +1,6 @@
 # Pull base image
 # I'm going to use the python version that anaconda is currently using on my machine
-FROM python:3.8.5
+FROM python:3.8.5 AS base
 
 # Setup GeoDjango
 # https://stackoverflow.com/questions/60403731/geodjango-and-postgis-setup-in-docker
@@ -25,5 +25,4 @@ RUN /usr/local/bin/python -m pip install --upgrade pip\
 # This copies everything from the current directory, to the backend directory on the system.
 # The current directory will be backend on my local computer.
 COPY . /backend
-EXPOSE 8000
-ENTRYPOINT ["sh", "entrypoint.sh"]
+ENTRYPOINT ["sh", "/backend/entrypoint.sh"]

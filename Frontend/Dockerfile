@@ -17,10 +17,9 @@ COPY . .
 RUN npm run build
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /frontend/node_modules/.bin:$PATH
-
-# production environment
+# Production environment
 FROM nginx:latest
-COPY --from=build /frontend/build /usr/share/nginx/html
-COPY --from=build /frontend/nginx /etc/nginx
+COPY nginx.conf /etc/nginx
+COPY --from=build /frontend/build/ /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

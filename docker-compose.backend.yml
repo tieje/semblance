@@ -4,11 +4,17 @@ services:
   backend:
     build:
       context: ./Backend
-    volumes:
-      - ./Backend:/backend
     container_name: semblance_backend
-    command: gunicorn config.wsgi
     env_file:
       - ./Backend/env/.env.prod
     ports:
       - 8000:8000
+  reverseproxy:
+    container_name: reverseproxy
+    build:
+      context: ./reverseproxy
+    ports:
+      - 80:80
+    volumes:
+      - ./Backend/static:/static
+      - ./reverseproxy/nginx.conf:/etc/nginx/nginx.conf

@@ -38,3 +38,4 @@ docker-compose down --remove-orphans
 # For only running the backkend
 
 docker-compose -f docker-compose.backend.yml up -d --build
+docker-compose -f docker-compose.fullstack.yml up -d --build
