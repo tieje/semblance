@@ -13,16 +13,12 @@ services:
     networks:
       - semblance-net
   frontend:
-    image: tieje/frontend:7
+    image: tieje/frontend:8
     container_name: semblance_frontend
     build:
       context: ./frontend
     ports:
       - 80:80
-    volumes:
-      - ./Backend/static:/static
-      - ./Frontend/nginx.conf:/etc/nginx/nginx.conf
-      - ./Frontend/build/:/usr/share/nginx/html
     networks:
       - semblance-net
 networks:
