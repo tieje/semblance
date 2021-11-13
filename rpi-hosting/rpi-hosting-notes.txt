@@ -572,7 +572,7 @@ The frontend still lives.
     + push changes to git and pull them on the rpis
     - update/deploy new stack
         docker stack deploy --compose-file docker-compose.prod.yml semblance 
-        docker service update --image tieje/backend:8 semblance_backend
+        docker service update --image tieje/backend:9 semblance_backend
         docker service update --image tieje/frontend:8 semblance_frontend
         Instead of an upstream backend, I might just use the gunicorn port directly
         https://serverfault.com/questions/960131/nginx-docker-and-gunicorn-url-without-the-port-number-in-the-url
