@@ -565,20 +565,23 @@ Experiments have been successful.
 The frontend still lives.
 - deploy semblance stack on docker swarm
     + push the backend and reverseproxy images to dockerhub
-        docker buildx build --platform linux/arm/v7 -t tieje/backend:11 --push ./Backend
+        docker buildx build --platform linux/arm/v7 -t tieje/backend:13 --push ./Backend
         docker buildx build --platform linux/arm/v7 -t tieje/frontend:11 --push ./Frontend
     + remove old semblance stack and network
         docker stack rm semblance
     + push changes to git and pull them on the rpis
-    - update/deploy new stack
+    + update/deploy new stack
         docker stack deploy --compose-file docker-compose.prod.yml semblance 
-        docker service update --image tieje/backend:10 semblance_backend
+        docker service update --image tieje/backend:13 semblance_backend
         docker service update --image tieje/frontend:10 semblance_frontend
         Instead of an upstream backend, I might just use the gunicorn port directly
         https://serverfault.com/questions/960131/nginx-docker-and-gunicorn-url-without-the-port-number-in-the-url
-        - copy correct .env files from semblance secrets
+        + copy correct .env files from semblance secrets
             cp -r $HOME/semblance-secrets/Database/env/ $HOME/semblance/Database/
-- edit nginx container such that it will point to the backend container
+
+I'm going to stop here for now since the ssl certificate is not that important.
+Also I need a change of pace. I've been working on this for about two weeks now.
+
 - learn how to get an ssl certificate and install it
     https://certbot.eff.org/lets-encrypt/debianbuster-nginx
     I wonder if I'll need to set up the ssl cert on the rpi or the nginx container?

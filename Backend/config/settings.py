@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
-
+#DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
+DEBUG = True
 ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
@@ -149,7 +149,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'semblance_db',
         'USER': 'thomas',
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'PASSWORD': 'eLEO4Wo6S3ZSe5OXLFS%VK',
         'HOST': '192.168.1.35',
         'PORT': '5432',
     }
