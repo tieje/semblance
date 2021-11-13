@@ -2,14 +2,12 @@ version: '3.9'
 
 services:
   backend:
-    image: tieje/backend:8
+    image: tieje/backend:9
     build:
       context: ./Backend
     container_name: semblance_backend
     env_file:
       - ./Backend/env/.env.prod
-    ports:
-      - 8000:8000
     networks:
       - semblance-net
   frontend:
