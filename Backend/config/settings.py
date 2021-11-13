@@ -203,7 +203,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'accounts'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATICFILES_FINDERS = [
@@ -224,6 +224,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://semblance.us',
     'http://api.semblance.us',
+    'http://192.168.1.33:8000',
+    'http://192.168.1.35:8000',
+    'http://semblance_backend:8000',
 )
 
 

@@ -9,13 +9,12 @@ services:
     ports:
       - 80:80
   backend:
-    image: tieje/backend:4
+    image: tieje/backend:7
     build:
       context: ./Backend
     volumes:
       - ./Backend:/backend
     container_name: semblance_backend
-    command: gunicorn config.wsgi
     env_file:
       - ./Backend/env/.env.prod
     ports:

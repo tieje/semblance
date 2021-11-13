@@ -1,0 +1,13 @@
+{% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+
+Welcome to {{ site_name }}, {{ user_display }}!
+
+Click the link below to confirm your e-mail address:
+
+{{ activate_url }}
+
+{% endblocktrans %}{% endautoescape %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!
+
+If you did not create an account with {{ site_name }} you may safely ignore this message.
+{{ site_domain }}{% endblocktrans %}

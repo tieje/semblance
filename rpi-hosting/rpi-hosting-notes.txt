@@ -529,6 +529,23 @@ x get postgresql running on rpis using ansible
                 docker buildx build --platform linux/arm/v7 -t tieje/frontend:6 --push ./Frontend
                 docker buildx build --platform linux/arm/v7 -t tieje/backend:4 --push ./Backend
                 docker stack deploy --compose-file docker-compose.prod.yml semblance
+            It connects to the backend... somehow. Not sure how I got this through, but the functionality is incomplete.
+            It's incomplete for the backend. Rather than reverse proxying to another container, maybe I should try all in one? All in one defeats the purpose of containers...
+            "It is recommended that you use separate overlay networks for each application or group of applications which will work together."
+            https://docs.docker.com/network/network-tutorial-overlay/
+            docker network ls shows that there is already a semblance_default overlay network running.
+            No need to create a new network. I just need to use the semblance_default overlay network.
+            docker network inspect shows me that the default network only has the backend container.
+            I'll need to create my own overlay network after all.
+            The overlay network is not something I should create with a docker-compose file...
+            https://docs.docker.com/network/overlay/
+            docker network create -d overlay --attachable semblance-net
+            docker service update --network-add semblance-net semblance_backend
+            docker service update --network-add semblance-net semblance_frontend
+            docker service update --image tieje/backend:7 semblance_backend
+            docker service update --image tieje/frontend:6 semblance_frontend
+            docker buildx build --platform linux/arm/v7 -t tieje/backend:7 --push ./Backend
+            It's weird.
 
 - edit nginx container such that it will point to the backend container
 - learn how to get an ssl certificate and install it
@@ -541,8 +558,6 @@ x get postgresql running on rpis using ansible
     https://scalified.com/2018/10/08/building-jenkins-pipelines-docker-swarm/
     This is one method:
     https://finnian.io/blog/ssl-with-docker-swarm-lets-encrypt-and-nginx/
-    
-
 =============
 BASE COMMANDS
 =============
