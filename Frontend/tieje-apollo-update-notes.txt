@@ -1,0 +1,19 @@
+11/14/2021
+
+Now that the database exists as a real database and http://api.semblance.us/graphql works I can actually start experimenting with Apollo.
+`npm start` will be used most of the time for determining if the code runs without major errors.
+`docker-compose` will be used when using Apollo to grab data from graphQL
+A second Dockerfile will need to be written for development such that it will not spin up nginx.
+The nginx multi-stage only copies and serves the build files, which is not useful for development.
+
++ create a second Dockerfile called Dockerfile-dev for the frontend and backend that does not spin up nginx or gunicorn and instead uses `npm start` and manage.py runserver
++ rewrite the main docker-compose file such that it uses localhost for the backend and frontend
+
+Monday and Tuesday are going to be boring days that I'll use to learn and review Apollo.
+
+11/15/2021
+
+~ review Apollo
+- plan out how Apollo will replace the state manager and for which components
+- replace the state management system
+
