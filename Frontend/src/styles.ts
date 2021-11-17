@@ -28,28 +28,6 @@ export const ArchetypeContainer = styled.div`
     width: 80vw;
 `
 
-export const ArchetypeListContainer = styled.div`
-    background-color: #3E4046;
-    margin: 1rem;
-    height: 85%;
-    padding 1rem;
-    // width: 90vw;
-`
-
-
-export const ArchetypeListItemContainer = styled.div`
-    background-color: #3E4046;
-    color: #FFEDE7;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    height: 5vh;
-    width: 8vw;
-    border: 1px solid #FFEDE7;
-`
 export const ArchetypeHorizontalContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -59,16 +37,6 @@ export const ArchetypeHorizontalContainer = styled.div`
     flex-grow: 1;
 `
 
-export const ArchetypesDescriptionContainer = styled.div`
-    display: flex;
-    background-color: #3E4046;
-    flex-grow: 1;
-    // margin: 3px;
-    // margin-bottom: 0;
-    padding: 3px;
-    height: 40vh;
-    width: 65vw;
-`
 export const ArchetypesChosen = styled.div`
     display: flex;
     // background-color: white;
@@ -77,39 +45,6 @@ export const ArchetypesChosen = styled.div`
     height: 50vh;
     width: 80vw;
     
-`
-// make this scrollable
-export const ArchetypeDescriptionItemContainer = styled.div`
-    display: flex;
-    background-color: #3E4046;
-    flex-grow: 1;
-    // margin: 10px;
-    padding: 10px;
-    flex-direction: column;
-    height: 25vh;
-    width: 30vw;
-`
-export const ArchetypeDescriptionName = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #3E4046;
-    color: #FFEDE7;
-    // margin: 1rem;
-    padding .8rem;
-    height: 3vh;
-
-`
-//make scrollable? or add padding
-export const ArchetypeDescriptionPayload = styled.div`
-    display: flex;
-    border: 1px solid #FD5C06;
-    color: #FFEDE7;
-    flex-grow: 1;
-    margin: 10px;
-    padding 10px;
-    font-size: 13px;
-    overflow-wrap: break-word;
-    height: 5vh;
 `
 
 export const ArchetypesChosenListContainer = styled.div`

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { nanoid } from "nanoid";
 
 export const ResultsContainer = styled.div`
     display: flex;
@@ -119,7 +120,7 @@ const Results = () => {
                 Results Header
             </ResultsHeader>
             {state.map((item: ResultItemProps) => {
-                return(<ResultItem key={item.id} id={item.id} username={item.username}/>
+                return(<ResultItem key={nanoid()} id={item.id} username={item.username}/>
                 )
             })}
             <ResultsLoadMore>

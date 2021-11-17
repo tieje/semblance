@@ -1,4 +1,5 @@
 import { ArchetypesChosenColumnContainer, ArchetypesChosenListContainer, ArchetypesChosenColumnHeaderContainer, ArchetypesChosenColumnHeader, ArchetypesChosenArchetypesListContainer, ArchetypesChosenArchetypeNameContainer, ArchetypesListItemDelete, ArchetypesChosenButtonCombiner } from "./styles";
+import { nanoid } from "nanoid";
 import { useAppState } from "./state/AppStateContext"
 import { removeArchIdentity, removeArchLooking } from "./state/actions";
 
@@ -23,12 +24,12 @@ export const ArchetypesChosenList = () => {
 	return (
 		<ArchetypesChosenListContainer>
 			<ArchetypesChosenColumn
-				key={'identity'}
+				key={nanoid()}
 				header = {'I identify closely with...'}
 				ListType = {'identity'}
 			/>
 			<ArchetypesChosenColumn
-				key={'looking'}
+				key={nanoid()}
 				header = {'I am looking for a...'}
 				ListType = {'looking'}
 			/>
@@ -43,7 +44,7 @@ const ArchetypesChosenColumn = ({ header, ListType }: ArchetypesChosenColumnProp
 				<ArchetypesChosenColumnHeader>
 					{header}
 				</ArchetypesChosenColumnHeader>
-				<ArchetypesChosenArchetypesList key={Math.floor(Math.random() * 100)} ListType = {ListType}/>
+				<ArchetypesChosenArchetypesList key={nanoid()} ListType = {ListType}/>
 			</ArchetypesChosenColumnHeaderContainer>
 		</ArchetypesChosenColumnContainer>
 	)
@@ -62,8 +63,8 @@ const ArchetypesChosenArchetypesList = ({ ListType }: ArchetypesChosenArchetypes
 		<ArchetypesChosenArchetypesListContainer>
 			{thisList.map((item: string, idx: number) => (
 				<ArchetypesChosenButtonCombiner>
-					<ArchetypesChosenArchetypeName key={idx + Math.floor(Math.random() * 100)} arch_name = { item } />
-					<DeleteButton key={idx + Math.floor(Math.random() * 100)} index={idx} type={ListType}/>
+					<ArchetypesChosenArchetypeName key={nanoid()} arch_name = { item } />
+					<DeleteButton key={nanoid()} index={idx} type={ListType}/>
 				</ArchetypesChosenButtonCombiner>
 			))}
 		</ArchetypesChosenArchetypesListContainer>

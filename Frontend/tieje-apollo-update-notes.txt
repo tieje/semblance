@@ -8,12 +8,73 @@ The nginx multi-stage only copies and serves the build files, which is not usefu
 
 + create a second Dockerfile called Dockerfile-dev for the frontend and backend that does not spin up nginx or gunicorn and instead uses `npm start` and manage.py runserver
 + rewrite the main docker-compose file such that it uses localhost for the backend and frontend
++ configured posgresql db such that it will allow incoming connection at port 5432 for any IP, even remotely
+    + port forward 5432 on my router to worker1
+    + emailed Nels instructions
 
 Monday and Tuesday are going to be boring days that I'll use to learn and review Apollo.
 
 11/15/2021
 
 ~ review Apollo
-- plan out how Apollo will replace the state manager and for which components
-- replace the state management system
+    Intro
+    https://www.apollographql.com/docs/react/
+    Apollo Features to implement: I guess basically everything.
+    The Fullstack React/TS book actually has some knowledge about Apollo. I'd like to get a reference to see recommended file structure.
+    So what he does is create an entire folder for each feature and then define types within a separate folder within the feature folder.
+    He did not build the file structure in a uniform way every time.
+    This is a fairly simple website. I'd like to fit every component in a single file.
+    A big part of the work that I'll need to do once Apollo is in place, is to refactor existing code.
+    The book is not very useful for understanding how Apollo works.
+    Apollo is actually not that complex. I will be implementing caching though. I'll need to cache:
+        - the most recent user search settings
+        - archetype data
+        - chat messages with between users.
+            - In the chat feature, I'll need to implement a feature to look up someone by username
+        - I will not cache the results.
+    The only reactive variables that I'll be implementing is for the chat application.
+        Specifically, reactive variables will be used only for received chat replies.
+11/16/2021
+I'm going to need to implement this in stages.
+The first stage will be fetching data from the backend.
+The second stage will be implementing the apollo cache.
+The third stage will be pagination and results.
 
+I'm still trying to figure out the best first task.
+The best first task will probably be starting with replacing the archetypes list with data from the backend.
+Start small anything else, I'll build on top of this seed task.
+It looks like apollo-boost is the quick and easy way to implement apollo with recommended settings.
+https://www.npmjs.com/package/apollo-boost
+Apollo-boost is actually recommended by the get started page.
+Apollo-boost just starts the Apollo Client and that's it.
+@apollo/react-hooks is where the react hooks come from for apollo
+react-apollo is a weird import.
+https://github.com/apollographql/react-apollo
+react-apollo is officially deprecated and functionality can be found in the @apollo/client
+react-apollo-hooks is also officially deprecated and has migrated to @apollo/react-hooks
+apollo package is actually called Apollo CLI. The CLI is actually a vscode extension?
+https://github.com/apollographql/apollo-tooling
+The apollo client is actually a console to interact with graphql.
+This console has since evolved into a vscode extension... which I want to download.
+https://github.com/apollographql/vscode-graphql
+I will not download the apollo cli vscode extension mostly because I don't really need it.
+Instead of taking a day to set this up, I could just test out my queries in the graphql extension.
+I won't need the apollo package. As far as I can see, it's deprecated.
+It looks like apollo-boost, apollo/client, and  apollo/react-hooks are all that I need right now.
+I don't actually need apollo-client since I'll be using the common configuration from apollo-boost.
+I only need apollo-boost and @apollo/react-hooks.
+The graphql package seems totally optional. It's just more javascript method building graphql statements.
+The gql module takes care of this and simplifies building graqphql statements.
+
++ replace the archetypes list with data from the backend
+    + set up the apollo client starting from the index.tsx file
+        I won't be using apollo-boost due to the lack of type support. I'm switching back to apollo-client.
+    + ApolloProvider wrapper
+    + Replace archetypes list with data from Apollo
+    + Replace functionality with the Apollo state management system. Use reactive variables.
++ replace the archetypes Description hover functionality       
+11/17/2021
+- use more reactive variables to replace the chosen Archetypes feature.
+    These will need to be stored in the cache though because they will ultimately become mutations.
+    https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies/
+- 
