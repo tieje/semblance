@@ -1,6 +1,13 @@
-# yorha
-The final group project for foundations.
-1. `git clone https://github.com/tieje/yorha.git`
+# semblance
+Thomas has decided that notes will be stored in txt files for the folders that their intended features affect.
+
+"Features to Build and How to Build Them" sections of the readme are basically deprecated.
+
+Each note txt file will be named "github-author-feature-name-notes".
+
+If there is more than one notes file, note files will be stored in a notes folder.
+
+1. `git clone https://github.com/tieje/semblance.git`
 2. `git checkout staging`
     - This command checks out the staging branch that already exists. You won't be able to see it the first time around with the `git branch` command, unless you use the `--remote` or `-a` option.
 3. `git branch`

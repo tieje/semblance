@@ -25,4 +25,4 @@ RUN /usr/local/bin/python -m pip install --upgrade pip\
 # This copies everything from the current directory, to the backend directory on the system.
 # The current directory will be backend on my local computer.
 COPY . /backend
-ENTRYPOINT ["sh", "/backend/entrypoint.sh"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

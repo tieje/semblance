@@ -1,14 +1,21 @@
+import { ApolloClient, ApolloProvider } from '@apollo/client';
+import { cache } from "./cache";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { App } from './App';
-import { AppStateProvider } from './state/AppStateContext';
+const client = new ApolloClient({
+  // required constructor fields
+  uri: 'http://api.semblance.us/graphql',
+  cache: cache,
+  // optional constructor fields
+})
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppStateProvider>
+    <ApolloProvider client={ client }>
       <App />
-    </AppStateProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

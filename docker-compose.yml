@@ -1,17 +1,27 @@
+# Objective: to simulate backend and frontend containers locally with localhosts for the frontend and backend without
+#  - nginx
+#  - gunicorn
+
 version: '3.9'
 
 services:
   backend:
-    build: ./Backend
-    image: tieje/backend:latest
-    # "manage.py" is the default Django app management tool. `runserver` starts the development server on the specified host and port using Django's built-in webserver.
-    # Django's development server is not suitable for production; you'll need to replace the command with either gunicorn, nginx, or heroku at some point just before production
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile-dev
+    container_name: semblance_backend_dev
     env_file:
-      - ./Backend/env/.env.dev
+      - ./Backend/env/.env.prod
+    ports:
+      - 8000:8000
+    volumes:
+      - ./Backend/:/backend
   frontend:
-    build: ./Frontend/
-    image: tieje/frontend:latest
-  # For when the time comes. The book says we need a volume within the db service and a volume outside of the db service...
-  # it's totally possible to just create a new volume every time, but it's simple extension of code to make it so that the volume is available to multiple services.
-  # For example, what if we wanted another container that backs up the data of the volume?
-  # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
+    container_name: semblance_frontend_dev
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile-dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./Frontend/:/frontend
