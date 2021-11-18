@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { nanoid } from "nanoid"
-import { archetypeHoveredVar } from "./cache"
+import { archetypeHoveredVar, chosenArchetypesVar } from "./cache"
 import { Archetype } from "./commonTypes"
 import styled from "styled-components"
 const ArchetypeListContainer = styled.div`
@@ -56,10 +56,27 @@ const ArchetypeListItem = ({ name, poem }: Archetype) => {
         })
         //console.log(archetypeHoveredVar().name)
     }
+    const blankTest = (e: string): boolean => {
+        return e === '';
+    }
+    const handleArchetypeChosen = () => {
+        let newState = {...chosenArchetypesVar()}
+        let blank_Iden_Index = newState.identifyAs.findIndex(blankTest)
+        if (blank_Iden_Index >= 0) {
+            newState.identifyAs[blank_Iden_Index] = name
+            chosenArchetypesVar(newState)
+        } else {
+            let blank_Look_Index = newState.lookingFor.findIndex(blankTest)
+            if (blank_Look_Index >= 0) {
+                newState.lookingFor[blank_Look_Index] = name
+                chosenArchetypesVar(newState)
+            }
+        }
+    }
     return (
         <ArchetypeListItemContainer
             onMouseOver={handleMouseOver}
-        // onClick={handleArchetypesChosenFilling}
+            onClick={handleArchetypeChosen}
         >
             {name}
         </ArchetypeListItemContainer>

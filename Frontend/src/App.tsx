@@ -1,9 +1,9 @@
 import { AppContainer, ArchetypeHorizontalContainer, ArchetypesChosen, MapContainer, MapProximityGenderSettingsContainer, ResultsChatContainer, ResultsContainer, MapChatSecondContainer, ArchetypeContainer } from './styles'
 import { ArchetypesList } from './ArchetypesList';
-import { ArchetypesChosenList } from './ArchetypesChosenList'
+import { ArchetypesChosenList } from './ArchetypesChosen/ArchetypesChosenList'
 import { Column } from './Column';
 import { ArchetypeDescription } from './ArchetypeDescription';
-import { Map } from './GoogleMap';
+import { Map } from './GoogleMaps/GoogleMap';
 import GenderSelect from './Gender';
 import GenderStyleContainer from './Gender';
 import ProxStyleContainer from './Proximity';

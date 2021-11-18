@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@apollo/client@^3.4.17":
+"@apollo/client@^3.2.5", "@apollo/client@^3.4.17":
   "integrity" "sha512-MDt2rwMX1GqodiVEKJqmDmAz8xr0qJmq5PdWeIt0yDaT4GOkKYWZiWkyfhfv3raTk8PyJvbsNG9q2CqmUrlGfg=="
   "resolved" "https://registry.npmjs.org/@apollo/client/-/client-3.4.17.tgz"
   "version" "3.4.17"
@@ -2552,6 +2552,11 @@
   dependencies:
     "normalize-path" "^3.0.0"
     "picomatch" "^2.0.4"
+
+"apollo3-cache-persist@^0.13.0":
+  "integrity" "sha512-3+npt3tyUvONliiZuO7dWhYd5JoxiKOzLfDzPJoIA/Tjexk19WCi9sgfjvhvvJVDyPNHiids5zS6xzW47gfJEA=="
+  "resolved" "https://registry.npmjs.org/apollo3-cache-persist/-/apollo3-cache-persist-0.13.0.tgz"
+  "version" "0.13.0"
 
 "aproba@^1.1.1":
   "integrity" "sha512-Y9J6ZjXtoYh8RnXVCMOU/ttDmk1aBjunq9vO0ta5x85WDQiQfUF9sIPBITdbiiIVcBo03Hi3jMxigBtsddlXRw=="

@@ -1,8 +1,8 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { MapDragEnd } from "./actions"
+import { useReactiveVar } from "@apollo/client";
+import { markerPositionVar } from "../cache";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { LoadingError, LoadingIcon } from "./styles";
-import { Marker } from '@react-google-maps/api';
-import { useAppState } from './state/AppStateContext';
-import { moveMapCursor } from "./state/actions";
 /*
 const options = {
     zoomControlOptions: {
@@ -22,10 +22,7 @@ const center = {
     lng:  -72.90545411168635
 };
 export const Map = () => {
-    const { markerPosition } = useAppState()
-    const MapDragEnd = (e: google.maps.MapMouseEvent): void => {
-        moveMapCursor(e)
-    }
+    const markerPosition = useReactiveVar(markerPositionVar)
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyB_KFzin_dG1jmLQ9zvgBPslFijVYaNHtM" // ,
         // ...otherOptions\

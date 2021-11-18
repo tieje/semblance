@@ -74,7 +74,35 @@ The gql module takes care of this and simplifies building graqphql statements.
     + Replace functionality with the Apollo state management system. Use reactive variables.
 + replace the archetypes Description hover functionality       
 11/17/2021
-- use more reactive variables to replace the chosen Archetypes feature.
-    These will need to be stored in the cache though because they will ultimately become mutations.
++ use more reactive variables to replace the chosen Archetypes feature.
+    These will need to be stored in the cache though because they will ultimately become mutations later.
     https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies/
-- 
+    x set up the cache.
+        The chosen archetypes will actually be reactive variables, but they'll be stored in the cache.
+        https://github.com/apollographql/apollo-cache-persist
+        I will want my settings to persist, so I'll be setting up cache persist.
+        + install apollo3-cache-persist
+        x store the archetypes in the cache
+            use the useApolloClient react hook
+            https://www.apollographql.com/docs/react/api/react/hooks/#useapolloclient
+            It looks like queries and mutations are the easy part. The hard part will be configuring that cache
+            I don't need a special configuration but I will to customize field behavior.
+            https://www.apollographql.com/docs/react/caching/cache-field-behavior/
+            read function specifies what happens when the cached value is read
+            merge function specifices when the cached value is written
+            What I will need to do is:
+            1. Upon clicking the archetype on the list, a reactive variable stored in the cache updates its value.
+            2. The reactive variable affects the chosen archetypes list.
+            If I really wanted to, I could get away with only using the reactive variables again.
+            I would rather that refreshing the page resets settings and search results.
+            There are few reasons for this.
+                1. Allow for new users to easily reset settings
+                2. Resetting settings would encourage heavy users to make an account.
+            ... It turns out that I will need to store user data on the cache AND have it persist.
+                However, I can tackle this problem problem later when I actually have user login and logout set up properly.
+                Right now, my main priority is to allow Nels to work on the Frontend even if it means cutting corners for now.          
++ use reactive variables for Google Map state as well
++ delete the state folder
+
+Mission Accomplished.
+I will return to this when i need to implement a cache to store user profile data on the local user's browser.

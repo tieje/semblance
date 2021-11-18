@@ -5,9 +5,12 @@ I should probably read the nginx cookbook at night. It's like a manual, but with
 start on page 23
 
 
-1. Change the state management system to Apollo
-2. Set up graphql queries to the backend.
-3. Find and set up a 3rd-party database service that you'd like to use for django
++ Change the state management system to Apollo
++ Set up graphql queries to the backend.
++ Find and set up a 3rd-party database service that you'd like to use for django
+    # It was me, Dio.
++ HAproxy or nginx load-balancing.
+    # nginx and docker swarm
 4. Create application data.
 5. Make Gender component stateful.
 6. Add a second gender component for whoever you're looking for.
@@ -17,8 +20,8 @@ start on page 23
 10. Host site online. Learn about networking.
 11. Add SSL certificate.
 12. ufw security
-13. HAproxy or nginx load-balancing.
 14. Login page, logout page, forgot password page, forgot username page, user authentication and emails.
+- create a cache for storing user profile data on the user's computer
 15. Google maps cluster results (if you can).
 16. Incorporate Stripe payment services.
 17. Improve CSS
