@@ -55,7 +55,7 @@ const ArchetypesChosenArchetypesList = ({ ListType }: ArchetypesChosenArchetypes
 
 const ArchetypesChosenArchetypeName = ({ arch_name }: ArchetypesChosenArchetypeNameProps) => {
     return (
-        <ArchetypesChosenArchetypeNameContainer>
+        <ArchetypesChosenArchetypeNameContainer key={nanoid()}>
             {arch_name}
         </ArchetypesChosenArchetypeNameContainer>
     )
@@ -74,7 +74,7 @@ const DeleteButton = ({ index, type }: DeleteProps) => {
         chosenArchetypesVar(newState)
     }
     return (
-        <ArchetypesListItemDelete onClick={handleDelete}>
+        <ArchetypesListItemDelete key={nanoid()} onClick={handleDelete}>
             {delete_title}
         </ArchetypesListItemDelete>
     )

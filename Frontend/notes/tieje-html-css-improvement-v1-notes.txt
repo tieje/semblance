@@ -1,0 +1,57 @@
+12/2/2021
+The goal of this branch is to make the html and css consistent and good-looking.
+This project ties in well with what I'm learning right now in school.
+
+The big question is, what should I focus on first?
+html? css? Or perhaps a button to make the entire app visible on one screen?
+It's a little bit of both. I'll do anything that I need to do make the app look good.
+
+
+12/3/2021
+
+I should probably not be using so many divs in react.
+Too many divs. I should use a more fixed kind of container.
+
+https://html.spec.whatwg.org/multipage/grouping-content.html#the-div-element
+div elements are actually supposed to be elements of last resort
+
+Right now I'm weighing the benefits of trying to make my site more accessible and less reliant on catch-all divs.
+I know what I should do. There is no sense denying that I need to replace my current html.
+
+html is a lot less about functionality and much more about readability and accessibility for users and developers.
+Basically everything functions like a div. Div is the catch-all but it's not specific enough.
+
+A great resource for html
+https://html.spec.whatwg.org/multipage/
+Why was this so hard to find???
+https://spec.whatwg.org/
+It's not impossible for me to go through the whole specification.
+I'd like to go briefly read through one specification per day.
+Because the web pages are so simple, I've been able to figure out some interesting CSS tricks.
+Along with reading one section per day, it will be useful to see if there is a type of html tag that exists for a specific use.
+I'll probably do this.
+Scratch that, I probably won't be able to realistically read this whole thing.
+I'll need to pick and choose what I want to learn.
+I do need to at least skim the headings so that I know what's possible with HTML.
+For now, I want to start high level and then deal with the rest later.
+Go high level first and then go as you go on.
+
+Things I can fix or create:
+- add the header tag with a nav tag
+- add the footer tag with information
+- add the main tag for your main application
+- replace the current archetype list with actual unordered list items
+- replace the archetype matrix with the table <tag>. This might complicate the current design a bit.
+- replace the description box with a blockquote and add some citations.
+- limit the description box size to a specific pixel width for a specific pixel width for devices
+- replace the big container divs with sections
+- add the proximity to the same div as the google map. Have proximity and and google maps be separate fragments in one div
+- make the pronouns looking for into a fragment? It just needs to be in something that can be toggled.
+- Turn the Results section into a table
+- turn the chat into a list with a text input
+
+- resizing of selected archetypes
+- resize and reorganize map and proximity and results components
+- add a non-function nav-bar
+- create all the image versions of the logo that Nels created
+- put some react router in there to switch between the homepage and the application
