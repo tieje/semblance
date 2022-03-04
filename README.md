@@ -1,4 +1,14 @@
 # semblance
+
+The purpose of this project is to encourage people to meet others locally, in-person through the gamification of story archetypes and narrative choices.
+
+# Status
+
+I have decided not to pursue completing this project anymore because it no longer interests me.
+I learned a lot though, so that's cool.
+
+# Old README
+
 Thomas has decided that notes will be stored in txt files for the folders that their intended features affect.
 
 "Features to Build and How to Build Them" sections of the readme are basically deprecated.
