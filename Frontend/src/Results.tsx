@@ -120,7 +120,7 @@ const Results = () => {
                 Results Header
             </ResultsHeader>
             {state.map((item: ResultItemProps) => {
-                return(<ResultItem key={nanoid()} id={item.id} username={item.username}/>
+                return (<ResultItem key={nanoid()} id={item.id} username={item.username} />
                 )
             })}
             <ResultsLoadMore>
@@ -131,17 +131,17 @@ const Results = () => {
                     <button>&gt;</button>
                 </ResultsLoadMoreAfter>
             </ResultsLoadMore>
-            </ResultsContainer>
+        </ResultsContainer>
     )
 }
 
 const ResultItem = ({ id, username }: ResultItemProps) => {
     return (
-        
+
         <ResultItemContainer>
             {username}
         </ResultItemContainer>
-        
+
     )
 }
 export default Results;

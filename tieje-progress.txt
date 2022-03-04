@@ -37,3 +37,81 @@ It would be far better for me to figure out what I'm doing for nginx, networks, 
 
 I'll need to figure out SSL certificates too prior to moving forward...
 
+12/7/2021
+
+I will not work on my side project until I'm finished with my mandatory projects.
+It's too difficult to transition from the mandatory project to the side project.
+The 1 hour practice interview question is important for waking me up in the morning and ensuring that I can fulfill my job.
+
+7:30 - 8am - get ready, eat a little
+8 - 12pm - work
+12 - 3pm - workout, eat, bear, shower, dishes, chores, tea (in this order)
+3 - 7pm - work
+7 - 9pm - eat/relax
+9 - 11:30pm - Bread time
+
+2/8/2022
+
+I have returned from hibernation.
+
+Portfolio Site
+- Create a simple portfolio Website with Gatsby from a template
+- The static host site should be hosted on netlify
+
+Website
+
+Frontend
+
+Form
+- Design the website on Figma: Do something simple and good looking for desktop, tablet, and mobile
+- Redo the HTML of the website.
+- Redo the CSS of the frontend with Tailwind, CSS Grid, or Bootstrap. (Don't rely solely on flex-box this time)
+- Add Animation from anim.xyz
+
+Function is good enough for now.
+
+Backend
+- lots of stuff to do. Just focus on the Frontend.
+
+Goal: get a normal Fullstack Job. Showcase your skills.
+
+2/10/2022
+
+- change the .env files to a script or key file that adds environment variables to your system instead of saving them to a repo
+- might want to create documentation first before creating it.
+
+3/3/2022
+
+Actually...
+
+- Figma design
+    - home page
+        - desktop
+        - tablet
+        - mobile
+    - application page
+        - desktop
+        - tablet
+        - mobile
+    - 404 page
+        - desktop
+        - tablet
+        - mobile
+    - form start page - getting initial information from user
+        - desktop
+        - tablet
+        - mobile
+- learn cypress frontend testing
+    - sample project 1
+- build frontend pages with Tailwind CSS
+    - use fake data
+    - use fake google map image
+    - add statefulness later
+- Make frontend pages stateful
+- fix backend django
+
+3/4/2022
+
+I've decided that I don't really want to build this application anymore.
+Mostly because I already have a wife.
+It's not that hard to meet people.
